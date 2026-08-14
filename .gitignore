@@ -1,0 +1,24 @@
+# Supplier delivery (748 MB) -- source data, not ours to version
+office/
+office.zip
+crate_src/
+
+# Local mirror of the NVIDIA Isaac 6.0 asset library (608 MB), re-downloadable
+assets/Isaac/
+
+# Generated textures and converted crate USDs (rebuild: scripts/make_crate_usd.py)
+assets/crates/
+assets/textures/
+
+# Scratch renders and asset-picking contact sheets
+scratch_*.png
+*_contact_sheet.png
+crate_solid_candidates.png
+astra_g1_view.png
+astra_conveyor_view.png
+astra_pile_view.png
+conveyor_thumbs/
+crate_thumbs/
+
+__pycache__/
+*.pyc

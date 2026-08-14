@@ -1,0 +1,63 @@
+I need you to export an Autodesk ReCap point cloud to E57 format.
+
+BACKGROUND
+I have a ReCap project of a factory packing station (ASTRA SWEETS). The
+scan data is in Autodesk's proprietary .rcs format, which only ReCap can
+read. I need it as E57 so I can import it into NVIDIA Isaac Sim on Linux.
+
+THE FILES
+Project file:  AstraSweets_RCP_Inkapstation.rcp
+Scan data:     AstraSweets_RCP_Inkapstation Support\
+                 AstraSweets_RCP_Inkapstation-1.rcs   (254 MB)
+
+The project was originally authored at this path, so check here first --
+it's a Google Drive mount and may already be present on this machine:
+
+  G:\.shortcut-targets-by-id\18vunDa4-EeK7KOg5517D4TyGeeSfguuQ\
+    17_AstraSweets\01_Release\v.20260801\
+
+If it isn't there, search the drives for "AstraSweets_RCP_Inkapstation"
+and tell me where you find it. If it's nowhere on this machine, stop and
+tell me -- I'll copy it over.
+
+WHAT I NEED YOU TO DO
+1. Check whether Autodesk ReCap (ReCap Pro) is installed. Report the
+   version. Typical location:
+     C:\Program Files\Autodesk\ReCap Pro\
+   If it is NOT installed, stop and tell me -- don't try workarounds.
+   CloudCompare, MeshLab, Blender etc. cannot read .rcs.
+
+2. Open the .rcp project in ReCap.
+
+3. Export the point cloud to E57:
+     File -> Export -> Export Point Cloud -> E57
+   Save it next to the original as:
+     AstraSweets_RCP_Inkapstation.e57
+
+CRITICAL SETTINGS -- please get these right:
+   - KEEP RGB / colour. The colour is the entire point of this export.
+   - KEEP the original coordinate system / origin. Do NOT re-center,
+     re-origin, or "move to world origin". If the origin shifts, the
+     cloud won't line up with the ArchiCAD model and I'd have to
+     manually register 13 million points.
+   - Full resolution if the output is under ~2 GB. If ReCap warns it
+     will be larger than that, tell me the estimate before proceeding
+     rather than decimating on your own.
+
+VERIFY THE EXPORT
+The source scan has these properties (from the project XML) -- please
+confirm the export roughly matches and report what you see:
+   - Point count:  13,226,607
+   - Has RGB:      yes
+   - Has normals:  yes
+   - Has intensity: yes
+   - Scanned volume: about 11.1 x 8.1 x 3.2 metres
+   - Project translation: (-2.87037637759985, -2.25166398412843,
+                           -0.0597000560760322)
+
+Then report back: the output file path, its size on disk, and anything
+ReCap warned about during export.
+
+IF E57 EXPORT FAILS OR ISN'T OFFERED
+Try LAS, then PTS, in that order -- both are fine for me. Tell me which
+one you used.
