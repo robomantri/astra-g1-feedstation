@@ -308,6 +308,13 @@ CONCRETE_MESHES = (
 )
 METAL_RGB = (0.56, 0.57, 0.58)
 METAL_ROUGHNESS = 0.28
+
+# Lighting. The first pass at 1200/2500 blew the whites out; the supplier's
+# reference render is much softer, so these are dialled back and the key light is
+# widened (a bigger angular size = softer shadow edges).
+DOME_INTENSITY = 320.0
+KEY_INTENSITY = 900.0
+KEY_ANGLE = 6.0        # degrees of angular size; 1.0 gives hard, crisp shadows
 # The A08 frame is painted with a material *named* Blue; it covers 38.6% of the model
 # (rails, uprights, cross-braces, feet). The rest are small frame details.
 CONVEYOR_FRAME_MATERIALS = (
@@ -564,10 +571,10 @@ async def _run():
 
     # ---- lighting ------------------------------------------------------
     dome = UsdLux.DomeLight.Define(stage, Sdf.Path("/World/DomeLight"))
-    dome.GetIntensityAttr().Set(1200.0)
+    dome.GetIntensityAttr().Set(DOME_INTENSITY)
     key = UsdLux.DistantLight.Define(stage, Sdf.Path("/World/KeyLight"))
-    key.GetIntensityAttr().Set(2500.0)
-    key.GetAngleAttr().Set(1.0)
+    key.GetIntensityAttr().Set(KEY_INTENSITY)
+    key.GetAngleAttr().Set(KEY_ANGLE)
     UsdGeom.Xformable(key.GetPrim()).AddRotateXYZOp().Set(Gf.Vec3f(-45.0, 0.0, 35.0))
     carb.log_warn("[build] lighting")
 
@@ -913,8 +920,8 @@ async def _run():
     # Mesh_017 (the branded back wall) sits at y~0 after the origin shift, so stand
     # inside the room and look back at it with the station in the foreground.
     # both workspaces: the copy extends to -11.08, so frame the whole run
-    centre = Gf.Vec3d(-11.0, 3.0, 1.2)
-    eye = Gf.Vec3d(-9.0, 26.0, 12.0)
+    centre = Gf.Vec3d(4.4, 4.2, 0.9)
+    eye = Gf.Vec3d(7.6, 8.5, 2.6)
     st = ViewportCameraState("/OmniverseKit_Persp", get_active_viewport())
     st.set_position_world(eye, True)
     st.set_target_world(centre, True)
