@@ -63,7 +63,12 @@ else
   PY=python
 fi
 
-"$PY" -c 'import isaacsim' 2>/dev/null || {
+# These must be set BEFORE the import check below: importing isaacsim without
+# them opens an interactive EULA prompt, which hangs on stdin and makes the
+# check look like a missing install.
+export OMNI_KIT_ACCEPT_EULA=YES ACCEPT_EULA=Y PRIVACY_CONSENT=Y
+
+"$PY" -c 'import isaacsim' </dev/null >/dev/null 2>&1 || {
   cat >&2 <<EOF
 [demo] ERROR: '$PY' cannot import isaacsim.
 
@@ -76,7 +81,6 @@ EOF
   exit 1
 }
 
-export OMNI_KIT_ACCEPT_EULA=YES ACCEPT_EULA=Y PRIVACY_CONSENT=Y
 # Real-time RTX at 1080p: deterministic, so no sampling noise.
 # OC_PATHTRACE=1 is available but measured 3x blurrier and 28x more
 # flickery at affordable sample counts -- needs ~1h/render to beat this.
