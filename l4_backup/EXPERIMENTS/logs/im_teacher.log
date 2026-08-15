@@ -1,0 +1,59 @@
+Importing module 'gym_38' (/root/ResMimic/thirdparty/isaacgym/python/isaacgym/_bindings/linux-x86_64/gym_38.so)
+Setting GYM_USD_PLUG_INFO_PATH to /root/ResMimic/thirdparty/isaacgym/python/isaacgym/_bindings/linux-x86_64/usd/plugInfo.json
+PyTorch version 2.4.1+cu121
+Device count 1
+/root/ResMimic/thirdparty/isaacgym/python/isaacgym/_bindings/src/gymtorch
+Using /root/.cache/torch_extensions/py38_cu121 as PyTorch extensions root...
+Emitting ninja build file /root/.cache/torch_extensions/py38_cu121/gymtorch/build.ninja...
+Building extension module gymtorch...
+Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+ninja: no work to do.
+Loading extension module gymtorch...
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+Not connected to PVD
++++ Using GPU PhysX
+Physics Engine: PhysX
+Physics Device: cuda:0
+GPU Pipeline: enabled
+/root/ResMimic/thirdparty/isaacgym/python/isaacgym/torch_utils.py:16: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  return torch.tensor(x, dtype=dtype, device=device, requires_grad=requires_grad)
+only got 832/1024 samples!
+Importing module 'rlgpu_38' (/root/ResMimic/thirdparty/isaacgym/python/isaacgym/_bindings/linux-x86_64/rlgpu_38.so)
+Setting seed: 6166
+Started to play
+RL device:  cuda:0
+rank: 0  local_rank: 0
+num_envs: 4
+num_actions: 153
+num_obs: 3198
+num_states: 0
+{'observation_space': Box(-inf, inf, (3198,), float32), 'action_space': Box(-1.0, 1.0, (153,), float32), 'agents': 1, 'value_size': 1}
+build mlp: 3198
+build mlp: 3198
+sigma
+actor_mlp.0.weight
+actor_mlp.0.bias
+actor_mlp.2.weight
+actor_mlp.2.bias
+actor_mlp.4.weight
+actor_mlp.4.bias
+critic_mlp.0.weight
+critic_mlp.0.bias
+critic_mlp.2.weight
+critic_mlp.2.bias
+critic_mlp.4.weight
+critic_mlp.4.bias
+value.weight
+value.bias
+mu.weight
+mu.bias
+RunningMeanStd:  (3198,)
+=> loading checkpoint 'checkpoints/smplx_teachers/sub2.pth'
+[record] writing /root/im_teacher_sub2.mp4
+reward: 75.95556640625 steps: 197.0
+reward: 85.20156860351562 steps: 258.0
+reward: 78.13372802734375 steps: 259.0
+[record] wrote 600 frames -> /root/im_teacher_sub2.mp4

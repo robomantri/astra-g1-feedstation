@@ -1,0 +1,15 @@
+[isaac] articulation root: ['/World/G1/pelvis/pelvis']
+[isaac] 29 dofs, permutation built
+[isaac] runner built | task=carrybox onnx ok
+[isaac] recording -> /root/oc_isaac.mp4
+[isaac] drive gains set: kp[14..99] kd[0.9..6.3]
+[isaac] step    0 base=[0.   0.   0.79] box=[1.   0.   0.15]
+[isaac] step  300 base=[ 0.52 -0.05  0.56] box=[1.02 0.01 0.15]
+[isaac] step  600 base=[ 0.55 -0.03  0.77] box=[ 0.83 -0.03  0.93]
+[isaac] step  900 base=[1.27 0.2  0.76] box=[1.57 0.28 0.95]
+[isaac] step 1200 base=[1.86 0.35 0.74] box=[2.18 0.44 0.86]
+[isaac] step 1500 base=[1.85 0.32 0.41] box=[2.35 0.44 0.42]
+[isaac] step 1800 base=[1.8  0.31 0.71] box=[2.32 0.54 0.15]
+[isaac] step 2100 base=[1.76 0.28 0.75] box=[2.32 0.54 0.15]
+[isaac] wrote 238 frames -> /root/oc_isaac.mp4
+[isaac] done

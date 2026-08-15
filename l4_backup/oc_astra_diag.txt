@@ -1,0 +1,17 @@
+[astra] collision: disabled 716, kept 2 (conveyor)
+[astra] G1 articulation root: ['/World/G1/pelvis/pelvis']
+[astra] 29 dofs mapped
+[astra] policy ready | task=carrybox init=(1.5, 0.0)+z0.15 goal=(3.3, 0.0, 0.92)
+[astra] drive gains applied
+[astra] step    0 [carry] g1=[0.   0.   0.79] crate=[1.5  0.   0.15]
+[astra] step  300 [carry] g1=[ 0.91 -0.03  0.7 ] crate=[1.5  0.   0.15]
+[astra] step  600 [carry] g1=[1.   0.05 0.76] crate=[1.34 0.03 0.8 ]
+[astra] step  900 [carry] g1=[ 1.48 -0.04  0.74] crate=[ 1.72 -0.04  0.94]
+[astra] step 1200 [carry] g1=[2.51 0.   0.74] crate=[ 2.77 -0.01  0.93]
+[astra] step 1500 [carry] g1=[ 2.74 -0.01  0.76] crate=[ 3.1  -0.03  0.92]
+[astra] step 1800 [carry] g1=[2.69 0.   0.78] crate=[ 3.1  -0.03  0.92]
+[astra] step 2100 [carry] g1=[ 2.68 -0.01  0.77] crate=[ 3.1  -0.03  0.92]
+[astra] step 2400 [carry] g1=[ 2.68 -0.01  0.77] crate=[ 3.1  -0.03  0.92]
+[astra] step 2700 [carry] g1=[ 2.68 -0.02  0.77] crate=[ 3.1  -0.03  0.92]
+[astra] wrote 298 frames
+[astra] done

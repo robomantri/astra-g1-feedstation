@@ -1,0 +1,2388 @@
+#usda 1.0
+(
+    defaultPrim = "dressing"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+def Xform "dressing"
+{
+    def Scope "Looks"
+    {
+        def Material "astra_red"
+        {
+            token outputs:surface.connect = </dressing/Looks/astra_red/shader.outputs:surface>
+            def Shader "shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.7, 0.075, 0.09)
+                float inputs:roughness = 0.45
+                float inputs:metallic = 0.0
+                token outputs:surface
+            }
+        }
+        def Material "astra_red2"
+        {
+            token outputs:surface.connect = </dressing/Looks/astra_red2/shader.outputs:surface>
+            def Shader "shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.78, 0.11, 0.12)
+                float inputs:roughness = 0.45
+                float inputs:metallic = 0.0
+                token outputs:surface
+            }
+        }
+        def Material "bin_grey"
+        {
+            token outputs:surface.connect = </dressing/Looks/bin_grey/shader.outputs:surface>
+            def Shader "shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.3, 0.31, 0.34)
+                float inputs:roughness = 0.55
+                float inputs:metallic = 0.0
+                token outputs:surface
+            }
+        }
+        def Material "bin_dark"
+        {
+            token outputs:surface.connect = </dressing/Looks/bin_dark/shader.outputs:surface>
+            def Shader "shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.17, 0.175, 0.195)
+                float inputs:roughness = 0.55
+                float inputs:metallic = 0.0
+                token outputs:surface
+            }
+        }
+        def Material "candy_red"
+        {
+            token outputs:surface.connect = </dressing/Looks/candy_red/shader.outputs:surface>
+            def Shader "shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.8, 0.13, 0.16)
+                float inputs:roughness = 0.4
+                float inputs:metallic = 0.0
+                token outputs:surface
+            }
+        }
+        def Material "candy_blue"
+        {
+            token outputs:surface.connect = </dressing/Looks/candy_blue/shader.outputs:surface>
+            def Shader "shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.18, 0.22, 0.56)
+                float inputs:roughness = 0.4
+                float inputs:metallic = 0.0
+                token outputs:surface
+            }
+        }
+        def Material "candy_pink"
+        {
+            token outputs:surface.connect = </dressing/Looks/candy_pink/shader.outputs:surface>
+            def Shader "shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.88, 0.36, 0.42)
+                float inputs:roughness = 0.4
+                float inputs:metallic = 0.0
+                token outputs:surface
+            }
+        }
+        def Material "steel"
+        {
+            token outputs:surface.connect = </dressing/Looks/steel/shader.outputs:surface>
+            def Shader "shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.62, 0.64, 0.67)
+                float inputs:roughness = 0.3
+                float inputs:metallic = 0.85
+                token outputs:surface
+            }
+        }
+        def Material "belt_dark"
+        {
+            token outputs:surface.connect = </dressing/Looks/belt_dark/shader.outputs:surface>
+            def Shader "shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.12, 0.125, 0.135)
+                float inputs:roughness = 0.7
+                float inputs:metallic = 0.0
+                token outputs:surface
+            }
+        }
+        def Material "frame_grey"
+        {
+            token outputs:surface.connect = </dressing/Looks/frame_grey/shader.outputs:surface>
+            def Shader "shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.48, 0.5, 0.53)
+                float inputs:roughness = 0.45
+                float inputs:metallic = 0.3
+                token outputs:surface
+            }
+        }
+        def Material "rail_yellow"
+        {
+            token outputs:surface.connect = </dressing/Looks/rail_yellow/shader.outputs:surface>
+            def Shader "shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.96, 0.78, 0.03)
+                float inputs:roughness = 0.45
+                float inputs:metallic = 0.0
+                token outputs:surface
+            }
+        }
+        def Material "post_black"
+        {
+            token outputs:surface.connect = </dressing/Looks/post_black/shader.outputs:surface>
+            def Shader "shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.09, 0.09, 0.095)
+                float inputs:roughness = 0.55
+                float inputs:metallic = 0.0
+                token outputs:surface
+            }
+        }
+    }
+    def Cube "wall_north"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/astra_red>
+        float3 xformOp:translate = (1.5, 5.94, 1.79)
+        float3 xformOp:scale = (5.5, 0.05, 1.56)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "wall_north_seam_0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/astra_red2>
+        float3 xformOp:translate = (-2.6, 5.87, 1.79)
+        float3 xformOp:scale = (0.05, 0.03, 1.56)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "wall_north_seam_1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/astra_red2>
+        float3 xformOp:translate = (0.2, 5.87, 1.79)
+        float3 xformOp:scale = (0.05, 0.03, 1.56)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "wall_north_seam_2"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/astra_red2>
+        float3 xformOp:translate = (3.0, 5.87, 1.79)
+        float3 xformOp:scale = (0.05, 0.03, 1.56)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "wall_north_seam_3"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/astra_red2>
+        float3 xformOp:translate = (5.6, 5.87, 1.79)
+        float3 xformOp:scale = (0.05, 0.03, 1.56)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "wall_east"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/astra_red2>
+        float3 xformOp:translate = (6.82, 3.0, 1.79)
+        float3 xformOp:scale = (0.05, 2.95, 1.56)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "conv_belt"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/belt_dark>
+        float3 xformOp:translate = (4.824999999999999, 3.45, 0.95)
+        float3 xformOp:scale = (1.275, 0.31, 0.03)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "conv_side_a"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/frame_grey>
+        float3 xformOp:translate = (4.824999999999999, 3.1100000000000003, 0.9299999999999999)
+        float3 xformOp:scale = (1.275, 0.03, 0.08)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "conv_side_b"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/frame_grey>
+        float3 xformOp:translate = (4.824999999999999, 3.79, 0.9299999999999999)
+        float3 xformOp:scale = (1.275, 0.03, 0.08)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "conv_leg_00"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/frame_grey>
+        float3 xformOp:translate = (3.8, 3.17, 0.59)
+        float3 xformOp:scale = (0.035, 0.035, 0.36)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "conv_leg_01"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/frame_grey>
+        float3 xformOp:translate = (3.8, 3.7300000000000004, 0.59)
+        float3 xformOp:scale = (0.035, 0.035, 0.36)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "conv_leg_10"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/frame_grey>
+        float3 xformOp:translate = (5.85, 3.17, 0.59)
+        float3 xformOp:scale = (0.035, 0.035, 0.36)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "conv_leg_11"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/frame_grey>
+        float3 xformOp:translate = (5.85, 3.7300000000000004, 0.59)
+        float3 xformOp:scale = (0.035, 0.035, 0.36)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "conv_drum"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/steel>
+        float3 xformOp:translate = (3.5999999999999996, 3.45, 0.9199999999999999)
+        float3 xformOp:scale = (0.11, 0.34, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "conv_roller_0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/steel>
+        float3 xformOp:translate = (3.9, 3.45, 0.985)
+        float3 xformOp:scale = (0.025, 0.3, 0.025)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "conv_roller_1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/steel>
+        float3 xformOp:translate = (4.208333333333333, 3.45, 0.985)
+        float3 xformOp:scale = (0.025, 0.3, 0.025)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "conv_roller_2"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/steel>
+        float3 xformOp:translate = (4.516666666666667, 3.45, 0.985)
+        float3 xformOp:scale = (0.025, 0.3, 0.025)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "conv_roller_3"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/steel>
+        float3 xformOp:translate = (4.825, 3.45, 0.985)
+        float3 xformOp:scale = (0.025, 0.3, 0.025)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "conv_roller_4"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/steel>
+        float3 xformOp:translate = (5.133333333333333, 3.45, 0.985)
+        float3 xformOp:scale = (0.025, 0.3, 0.025)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "conv_roller_5"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/steel>
+        float3 xformOp:translate = (5.441666666666666, 3.45, 0.985)
+        float3 xformOp:scale = (0.025, 0.3, 0.025)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "conv_roller_6"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/steel>
+        float3 xformOp:translate = (5.75, 3.45, 0.985)
+        float3 xformOp:scale = (0.025, 0.3, 0.025)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cv_bin_0_floor"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.3, 3.45, 1.021)
+        float3 xformOp:scale = (0.3, 0.2, 0.011)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cv_bin_0_wx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.011, 3.45, 1.12)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cv_bin_0_wx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.5889999999999995, 3.45, 1.12)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cv_bin_0_wy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.3, 3.261, 1.12)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cv_bin_0_wy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.3, 3.6390000000000002, 1.12)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cv_bin_0_lipx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.0, 3.45, 1.222)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cv_bin_0_lipx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.6, 3.45, 1.222)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cv_bin_0_lipy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.3, 3.25, 1.222)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cv_bin_0_lipy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.3, 3.6500000000000004, 1.222)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cv_bin_0_fill"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/candy_red>
+        float3 xformOp:translate = (4.3, 3.45, 1.1125)
+        float3 xformOp:scale = (0.27799999999999997, 0.17800000000000002, 0.08049999999999999)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cv_bin_1_floor"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (5.5, 3.45, 1.021)
+        float3 xformOp:scale = (0.3, 0.2, 0.011)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cv_bin_1_wx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (5.211, 3.45, 1.12)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cv_bin_1_wx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (5.789, 3.45, 1.12)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cv_bin_1_wy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (5.5, 3.261, 1.12)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cv_bin_1_wy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (5.5, 3.6390000000000002, 1.12)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cv_bin_1_lipx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (5.2, 3.45, 1.222)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cv_bin_1_lipx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (5.8, 3.45, 1.222)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cv_bin_1_lipy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (5.5, 3.25, 1.222)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cv_bin_1_lipy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (5.5, 3.6500000000000004, 1.222)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cv_bin_1_fill"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/candy_blue>
+        float3 xformOp:translate = (5.5, 3.45, 1.1125)
+        float3 xformOp:scale = (0.27799999999999997, 0.17800000000000002, 0.08049999999999999)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "pallet_a"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 4.85, 0.23800000000000002)
+        float3 xformOp:scale = (0.65, 0.45, 0.008)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_0a_floor"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 4.64, 0.256)
+        float3 xformOp:scale = (0.3, 0.2, 0.011)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_0a_wx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.6610000000000005, 4.64, 0.355)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_0a_wx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (5.239, 4.64, 0.355)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_0a_wy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.95, 4.451, 0.355)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_0a_wy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.95, 4.829, 0.355)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_0a_lipx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.65, 4.64, 0.45699999999999996)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_0a_lipx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (5.25, 4.64, 0.45699999999999996)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_0a_lipy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 4.4399999999999995, 0.45699999999999996)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_0a_lipy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 4.84, 0.45699999999999996)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_0a_fill"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/candy_blue>
+        float3 xformOp:translate = (4.95, 4.64, 0.34750000000000003)
+        float3 xformOp:scale = (0.27799999999999997, 0.17800000000000002, 0.08049999999999999)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_0b_floor"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 5.06, 0.256)
+        float3 xformOp:scale = (0.3, 0.2, 0.011)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_0b_wx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.6610000000000005, 5.06, 0.355)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_0b_wx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (5.239, 5.06, 0.355)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_0b_wy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.95, 4.8709999999999996, 0.355)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_0b_wy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.95, 5.249, 0.355)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_0b_lipx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.65, 5.06, 0.45699999999999996)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_0b_lipx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (5.25, 5.06, 0.45699999999999996)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_0b_lipy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 4.859999999999999, 0.45699999999999996)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_0b_lipy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 5.26, 0.45699999999999996)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_0b_fill"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/candy_red>
+        float3 xformOp:translate = (4.95, 5.06, 0.34750000000000003)
+        float3 xformOp:scale = (0.27799999999999997, 0.17800000000000002, 0.08049999999999999)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_1a_floor"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 4.64, 0.494)
+        float3 xformOp:scale = (0.3, 0.2, 0.011)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_1a_wx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.6610000000000005, 4.64, 0.593)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_1a_wx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (5.239, 4.64, 0.593)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_1a_wy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.95, 4.451, 0.593)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_1a_wy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.95, 4.829, 0.593)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_1a_lipx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.65, 4.64, 0.695)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_1a_lipx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (5.25, 4.64, 0.695)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_1a_lipy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 4.4399999999999995, 0.695)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_1a_lipy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 4.84, 0.695)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_1a_fill"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/candy_red>
+        float3 xformOp:translate = (4.95, 4.64, 0.5855)
+        float3 xformOp:scale = (0.27799999999999997, 0.17800000000000002, 0.08049999999999999)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_1b_floor"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 5.06, 0.494)
+        float3 xformOp:scale = (0.3, 0.2, 0.011)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_1b_wx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.6610000000000005, 5.06, 0.593)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_1b_wx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (5.239, 5.06, 0.593)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_1b_wy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.95, 4.8709999999999996, 0.593)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_1b_wy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.95, 5.249, 0.593)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_1b_lipx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.65, 5.06, 0.695)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_1b_lipx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (5.25, 5.06, 0.695)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_1b_lipy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 4.859999999999999, 0.695)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_1b_lipy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 5.26, 0.695)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_1b_fill"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/candy_blue>
+        float3 xformOp:translate = (4.95, 5.06, 0.5855)
+        float3 xformOp:scale = (0.27799999999999997, 0.17800000000000002, 0.08049999999999999)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_2a_floor"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 4.64, 0.732)
+        float3 xformOp:scale = (0.3, 0.2, 0.011)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_2a_wx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.6610000000000005, 4.64, 0.831)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_2a_wx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (5.239, 4.64, 0.831)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_2a_wy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.95, 4.451, 0.831)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_2a_wy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.95, 4.829, 0.831)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_2a_lipx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.65, 4.64, 0.9329999999999999)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_2a_lipx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (5.25, 4.64, 0.9329999999999999)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_2a_lipy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 4.4399999999999995, 0.9329999999999999)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_2a_lipy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 4.84, 0.9329999999999999)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_2a_fill"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/candy_blue>
+        float3 xformOp:translate = (4.95, 4.64, 0.8235)
+        float3 xformOp:scale = (0.27799999999999997, 0.17800000000000002, 0.08049999999999999)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_2b_floor"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 5.06, 0.732)
+        float3 xformOp:scale = (0.3, 0.2, 0.011)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_2b_wx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.6610000000000005, 5.06, 0.831)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_2b_wx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (5.239, 5.06, 0.831)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_2b_wy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.95, 4.8709999999999996, 0.831)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_2b_wy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.95, 5.249, 0.831)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_2b_lipx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.65, 5.06, 0.9329999999999999)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_2b_lipx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (5.25, 5.06, 0.9329999999999999)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_2b_lipy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 4.859999999999999, 0.9329999999999999)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_2b_lipy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 5.26, 0.9329999999999999)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_2b_fill"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/candy_red>
+        float3 xformOp:translate = (4.95, 5.06, 0.8235)
+        float3 xformOp:scale = (0.27799999999999997, 0.17800000000000002, 0.08049999999999999)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_3a_floor"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 4.64, 0.97)
+        float3 xformOp:scale = (0.3, 0.2, 0.011)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_3a_wx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.6610000000000005, 4.64, 1.069)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_3a_wx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (5.239, 4.64, 1.069)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_3a_wy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.95, 4.451, 1.069)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_3a_wy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.95, 4.829, 1.069)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_3a_lipx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.65, 4.64, 1.171)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_3a_lipx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (5.25, 4.64, 1.171)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_3a_lipy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 4.4399999999999995, 1.171)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_3a_lipy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 4.84, 1.171)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_3a_fill"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/candy_red>
+        float3 xformOp:translate = (4.95, 4.64, 1.0614999999999999)
+        float3 xformOp:scale = (0.27799999999999997, 0.17800000000000002, 0.08049999999999999)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_3b_floor"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 5.06, 0.97)
+        float3 xformOp:scale = (0.3, 0.2, 0.011)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_3b_wx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.6610000000000005, 5.06, 1.069)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_3b_wx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (5.239, 5.06, 1.069)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_3b_wy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.95, 4.8709999999999996, 1.069)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_3b_wy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.95, 5.249, 1.069)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_3b_lipx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.65, 5.06, 1.171)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_3b_lipx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (5.25, 5.06, 1.171)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_3b_lipy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 4.859999999999999, 1.171)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_3b_lipy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.95, 5.26, 1.171)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackA_3b_fill"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/candy_blue>
+        float3 xformOp:translate = (4.95, 5.06, 1.0614999999999999)
+        float3 xformOp:scale = (0.27799999999999997, 0.17800000000000002, 0.08049999999999999)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "pallet_b"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.75, 4.95, 0.23800000000000002)
+        float3 xformOp:scale = (0.65, 0.45, 0.008)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_0a_floor"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.75, 4.74, 0.256)
+        float3 xformOp:scale = (0.3, 0.2, 0.011)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_0a_wx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (2.4610000000000003, 4.74, 0.355)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_0a_wx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (3.0389999999999997, 4.74, 0.355)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_0a_wy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (2.75, 4.551, 0.355)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_0a_wy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (2.75, 4.929, 0.355)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_0a_lipx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.45, 4.74, 0.45699999999999996)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_0a_lipx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (3.05, 4.74, 0.45699999999999996)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_0a_lipy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.75, 4.54, 0.45699999999999996)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_0a_lipy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.75, 4.94, 0.45699999999999996)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_0a_fill"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/candy_red>
+        float3 xformOp:translate = (2.75, 4.74, 0.34750000000000003)
+        float3 xformOp:scale = (0.27799999999999997, 0.17800000000000002, 0.08049999999999999)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_0b_floor"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.75, 5.16, 0.256)
+        float3 xformOp:scale = (0.3, 0.2, 0.011)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_0b_wx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (2.4610000000000003, 5.16, 0.355)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_0b_wx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (3.0389999999999997, 5.16, 0.355)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_0b_wy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (2.75, 4.971, 0.355)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_0b_wy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (2.75, 5.349, 0.355)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_0b_lipx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.45, 5.16, 0.45699999999999996)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_0b_lipx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (3.05, 5.16, 0.45699999999999996)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_0b_lipy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.75, 4.96, 0.45699999999999996)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_0b_lipy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.75, 5.36, 0.45699999999999996)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_0b_fill"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/candy_pink>
+        float3 xformOp:translate = (2.75, 5.16, 0.34750000000000003)
+        float3 xformOp:scale = (0.27799999999999997, 0.17800000000000002, 0.08049999999999999)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_1a_floor"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.75, 4.74, 0.494)
+        float3 xformOp:scale = (0.3, 0.2, 0.011)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_1a_wx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (2.4610000000000003, 4.74, 0.593)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_1a_wx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (3.0389999999999997, 4.74, 0.593)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_1a_wy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (2.75, 4.551, 0.593)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_1a_wy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (2.75, 4.929, 0.593)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_1a_lipx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.45, 4.74, 0.695)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_1a_lipx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (3.05, 4.74, 0.695)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_1a_lipy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.75, 4.54, 0.695)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_1a_lipy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.75, 4.94, 0.695)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_1a_fill"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/candy_pink>
+        float3 xformOp:translate = (2.75, 4.74, 0.5855)
+        float3 xformOp:scale = (0.27799999999999997, 0.17800000000000002, 0.08049999999999999)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_1b_floor"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.75, 5.16, 0.494)
+        float3 xformOp:scale = (0.3, 0.2, 0.011)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_1b_wx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (2.4610000000000003, 5.16, 0.593)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_1b_wx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (3.0389999999999997, 5.16, 0.593)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_1b_wy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (2.75, 4.971, 0.593)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_1b_wy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (2.75, 5.349, 0.593)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_1b_lipx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.45, 5.16, 0.695)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_1b_lipx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (3.05, 5.16, 0.695)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_1b_lipy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.75, 4.96, 0.695)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_1b_lipy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.75, 5.36, 0.695)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_1b_fill"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/candy_red>
+        float3 xformOp:translate = (2.75, 5.16, 0.5855)
+        float3 xformOp:scale = (0.27799999999999997, 0.17800000000000002, 0.08049999999999999)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_2a_floor"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.75, 4.74, 0.732)
+        float3 xformOp:scale = (0.3, 0.2, 0.011)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_2a_wx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (2.4610000000000003, 4.74, 0.831)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_2a_wx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (3.0389999999999997, 4.74, 0.831)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_2a_wy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (2.75, 4.551, 0.831)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_2a_wy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (2.75, 4.929, 0.831)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_2a_lipx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.45, 4.74, 0.9329999999999999)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_2a_lipx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (3.05, 4.74, 0.9329999999999999)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_2a_lipy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.75, 4.54, 0.9329999999999999)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_2a_lipy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.75, 4.94, 0.9329999999999999)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_2a_fill"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/candy_red>
+        float3 xformOp:translate = (2.75, 4.74, 0.8235)
+        float3 xformOp:scale = (0.27799999999999997, 0.17800000000000002, 0.08049999999999999)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_2b_floor"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.75, 5.16, 0.732)
+        float3 xformOp:scale = (0.3, 0.2, 0.011)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_2b_wx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (2.4610000000000003, 5.16, 0.831)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_2b_wx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (3.0389999999999997, 5.16, 0.831)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_2b_wy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (2.75, 4.971, 0.831)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_2b_wy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (2.75, 5.349, 0.831)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_2b_lipx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.45, 5.16, 0.9329999999999999)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_2b_lipx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (3.05, 5.16, 0.9329999999999999)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_2b_lipy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.75, 4.96, 0.9329999999999999)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_2b_lipy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.75, 5.36, 0.9329999999999999)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "stackB_2b_fill"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/candy_red>
+        float3 xformOp:translate = (2.75, 5.16, 0.8235)
+        float3 xformOp:scale = (0.27799999999999997, 0.17800000000000002, 0.08049999999999999)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_0_floor"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (3.95, 2.55, 0.24600000000000002)
+        float3 xformOp:scale = (0.3, 0.2, 0.011)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_0_wx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (3.6610000000000005, 2.55, 0.34500000000000003)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_0_wx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.239, 2.55, 0.34500000000000003)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_0_wy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (3.95, 2.3609999999999998, 0.34500000000000003)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_0_wy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (3.95, 2.739, 0.34500000000000003)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_0_lipx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (3.6500000000000004, 2.55, 0.447)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_0_lipx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.25, 2.55, 0.447)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_0_lipy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (3.95, 2.3499999999999996, 0.447)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_0_lipy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (3.95, 2.75, 0.447)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_0_fill"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/candy_red>
+        float3 xformOp:translate = (3.95, 2.55, 0.3375)
+        float3 xformOp:scale = (0.27799999999999997, 0.17800000000000002, 0.08049999999999999)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_1_floor"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.62, 2.5, 0.24600000000000002)
+        float3 xformOp:scale = (0.3, 0.2, 0.011)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_1_wx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.331, 2.5, 0.34500000000000003)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_1_wx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.909, 2.5, 0.34500000000000003)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_1_wy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.62, 2.311, 0.34500000000000003)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_1_wy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.62, 2.689, 0.34500000000000003)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_1_lipx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.32, 2.5, 0.447)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_1_lipx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.92, 2.5, 0.447)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_1_lipy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.62, 2.3, 0.447)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_1_lipy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.62, 2.7, 0.447)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_1_fill"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/candy_pink>
+        float3 xformOp:translate = (4.62, 2.5, 0.3375)
+        float3 xformOp:scale = (0.27799999999999997, 0.17800000000000002, 0.08049999999999999)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_2_floor"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.3, 1.72, 0.24600000000000002)
+        float3 xformOp:scale = (0.3, 0.2, 0.011)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_2_wx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.011, 1.72, 0.34500000000000003)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_2_wx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.5889999999999995, 1.72, 0.34500000000000003)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_2_wy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.3, 1.531, 0.34500000000000003)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_2_wy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.3, 1.909, 0.34500000000000003)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_2_lipx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.0, 1.72, 0.447)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_2_lipx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.6, 1.72, 0.447)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_2_lipy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.3, 1.52, 0.447)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_2_lipy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.3, 1.92, 0.447)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_2_fill"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/candy_blue>
+        float3 xformOp:translate = (4.3, 1.72, 0.3375)
+        float3 xformOp:scale = (0.27799999999999997, 0.17800000000000002, 0.08049999999999999)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_3_floor"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.4, -0.85, 0.24600000000000002)
+        float3 xformOp:scale = (0.3, 0.2, 0.011)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_3_wx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (2.111, -0.85, 0.34500000000000003)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_3_wx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (2.6889999999999996, -0.85, 0.34500000000000003)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_3_wy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (2.4, -1.0390000000000001, 0.34500000000000003)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_3_wy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (2.4, -0.6609999999999999, 0.34500000000000003)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_3_lipx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.1, -0.85, 0.447)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_3_lipx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.6999999999999997, -0.85, 0.447)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_3_lipy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.4, -1.05, 0.447)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "floor_bin_3_lipy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (2.4, -0.6499999999999999, 0.447)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_deck"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/frame_grey>
+        float3 xformOp:translate = (5.55, 0.55, 0.53)
+        float3 xformOp:scale = (0.6, 0.39, 0.025)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_handle"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/frame_grey>
+        float3 xformOp:translate = (4.97, 0.55, 0.9299999999999999)
+        float3 xformOp:scale = (0.025, 0.36, 0.4)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_wheel_00"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/post_black>
+        float3 xformOp:translate = (5.05, 0.23000000000000004, 0.32)
+        float3 xformOp:scale = (0.045, 0.03, 0.09)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_wheel_01"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/post_black>
+        float3 xformOp:translate = (5.05, 0.8700000000000001, 0.32)
+        float3 xformOp:scale = (0.045, 0.03, 0.09)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_wheel_10"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/post_black>
+        float3 xformOp:translate = (6.05, 0.23000000000000004, 0.32)
+        float3 xformOp:scale = (0.045, 0.03, 0.09)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_wheel_11"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/post_black>
+        float3 xformOp:translate = (6.05, 0.8700000000000001, 0.32)
+        float3 xformOp:scale = (0.045, 0.03, 0.09)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_bin_0_floor"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (5.27, 0.55, 0.5660000000000001)
+        float3 xformOp:scale = (0.3, 0.2, 0.011)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_bin_0_wx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (4.981, 0.55, 0.665)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_bin_0_wx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (5.558999999999999, 0.55, 0.665)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_bin_0_wy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (5.27, 0.36100000000000004, 0.665)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_bin_0_wy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (5.27, 0.739, 0.665)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_bin_0_lipx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (4.97, 0.55, 0.767)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_bin_0_lipx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (5.569999999999999, 0.55, 0.767)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_bin_0_lipy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (5.27, 0.35000000000000003, 0.767)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_bin_0_lipy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (5.27, 0.75, 0.767)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_bin_0_fill"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/candy_red>
+        float3 xformOp:translate = (5.27, 0.55, 0.6575000000000001)
+        float3 xformOp:scale = (0.27799999999999997, 0.17800000000000002, 0.08049999999999999)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_bin_1_floor"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (5.85, 0.55, 0.5660000000000001)
+        float3 xformOp:scale = (0.3, 0.2, 0.011)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_bin_1_wx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (5.561, 0.55, 0.665)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_bin_1_wx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (6.138999999999999, 0.55, 0.665)
+        float3 xformOp:scale = (0.011, 0.2, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_bin_1_wy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (5.85, 0.36100000000000004, 0.665)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_bin_1_wy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_grey>
+        float3 xformOp:translate = (5.85, 0.739, 0.665)
+        float3 xformOp:scale = (0.27799999999999997, 0.011, 0.11)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_bin_1_lipx0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (5.55, 0.55, 0.767)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_bin_1_lipx1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (6.1499999999999995, 0.55, 0.767)
+        float3 xformOp:scale = (0.015, 0.20700000000000002, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_bin_1_lipy0"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (5.85, 0.35000000000000003, 0.767)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_bin_1_lipy1"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/bin_dark>
+        float3 xformOp:translate = (5.85, 0.75, 0.767)
+        float3 xformOp:scale = (0.307, 0.015, 0.009)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+    def Cube "cart_bin_1_fill"
+    {
+        double size = 2
+        rel material:binding = </dressing/Looks/candy_blue>
+        float3 xformOp:translate = (5.85, 0.55, 0.6575000000000001)
+        float3 xformOp:scale = (0.27799999999999997, 0.17800000000000002, 0.08049999999999999)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        float3[] extent = [(-1, -1, -1), (1, 1, 1)]
+    }
+}

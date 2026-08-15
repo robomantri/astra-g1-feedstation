@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+source /root/ResMimic/thirdparty/miniconda3/bin/activate intermimic-gym
+export LD_LIBRARY_PATH="$CONDA_PREFIX/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+cd /root/InterMimic
+export PYTHONPATH="/root/InterMimic/isaacgym/src:/root/InterMimic:$PYTHONPATH"
+export INTERMIMIC_RECORD=/root/im_g1_weld.mp4
+export INTERMIMIC_RECORD_FPS=30
+export INTERMIMIC_RECORD_MAXFRAMES=600
+export G1_WELD=1
+export G1_WELD_DIST=0.35
+exec python -m intermimic.run --task InterMimicG1 \
+  --cfg_env isaacgym/src/intermimic/data/cfg/omomo_g1_smallbox.yaml \
+  --cfg_train isaacgym/src/intermimic/data/cfg/train/rlg/omomo_g1_29dof_with_hand.yaml \
+  --checkpoint checkpoints/g1/sub8.pth --test --num_envs 4 --headless

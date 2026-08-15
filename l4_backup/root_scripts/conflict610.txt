@@ -1,0 +1,5 @@
+libnvidia-cfg1:amd64
+libnvidia-gpucomp:amd64
+nvidia-firmware
+nvidia-modprobe
+nvidia-settings

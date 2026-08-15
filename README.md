@@ -6,6 +6,56 @@ physics-enabled Isaac Sim scene with a Unitree G1.
 
 ---
 
+## G1 pick-and-place demo
+
+The headline deliverable: a Unitree G1 walks to a box on the floor beside the
+crate piles, picks it up two-handed, carries it to the conveyor and places it on
+the deck — then stays standing. Driven by the released
+[OmniContact](https://github.com/Ingrid789/OmniContact_sim2sim) `carrybox` ONNX
+policy, reused byte-for-byte; only the simulator adapter is ours.
+
+Runs on the L4 box (`ssh l4`), one command, ~10 min:
+
+```bash
+bash /root/astra_demo/run_astra_demo.sh            # -> astra_g1_conveyor_wallside.mp4
+```
+
+Local copies live in `scripts/astra_demo/`; the output is
+`results/astra_g1_conveyor_wallside.mp4`.
+
+| | |
+|---|---|
+| spawn | (8.50, 0.35), yaw 180° — among the crate piles |
+| pick | box on the floor at (7.00, 0.35) |
+| place | conveyor deck at (5.27, 0.30, **0.92**) = deck top + half box |
+
+Tunable without editing code: `OC_DOME` / `OC_KEY` (light intensities),
+`OC_RES`, `OC_SPP`, `OC_ACCUM`, `OC_PATHTRACE`, and `OC_CAMSWEEP=1` /
+`OC_PROBE=1` / `OC_PROBE2=1` for single-boot camera and scene probes.
+
+### Two constraints worth knowing
+
+Both cost a lot of debugging; both are commented at their site in
+`scripts/astra_demo/astra_demo.py`.
+
+1. **The reference plan is built from the runner's own MuJoCo state, not from
+   Isaac.** `_prepare_episode()` → `_sync_state_cmd_from_mj()` reads
+   `self.d.qpos[:3]`, which sits at the origin. Spawn the Isaac robot anywhere
+   else and it starts off its own reference, lunges to close the gap and falls.
+   Fix: write the spawn pose into `r.d.qpos` *before* the plan is generated.
+
+2. **Isaac reports base velocities in the world frame; the policy expects the
+   body frame** (it was written against MuJoCo `qvel`). These coincide at
+   yaw ≈ 0, so it looked correct for every run along +x — at yaw 170–180° the
+   x/y components sign-flip and the robot collapses within a second. Feed
+   `R.T @ get_angular_velocity()`, same as `gravity_ori`.
+
+Known limits, established by measurement: picks above ~0.35 m fail (the policy
+was trained on floor picks), and every post-carry policy swap falls (7 variants
+tried) — only the carry policy keeps the robot upright indefinitely.
+
+---
+
 ## Quick start
 
 All commands assume Isaac Sim 6.0 at `~/isaacsim6_venv`.

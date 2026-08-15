@@ -1,0 +1,73 @@
+Importing module 'gym_38' (/root/ResMimic/thirdparty/isaacgym/python/isaacgym/_bindings/linux-x86_64/gym_38.so)
+Setting GYM_USD_PLUG_INFO_PATH to /root/ResMimic/thirdparty/isaacgym/python/isaacgym/_bindings/linux-x86_64/usd/plugInfo.json
+PyTorch version 2.4.1+cu121
+Device count 1
+/root/ResMimic/thirdparty/isaacgym/python/isaacgym/_bindings/src/gymtorch
+Using /root/.cache/torch_extensions/py38_cu121 as PyTorch extensions root...
+Emitting ninja build file /root/.cache/torch_extensions/py38_cu121/gymtorch/build.ninja...
+Building extension module gymtorch...
+Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+ninja: no work to do.
+Loading extension module gymtorch...
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+Not connected to PVD
++++ Using GPU PhysX
+Physics Engine: PhysX
+Physics Device: cuda:0
+GPU Pipeline: enabled
+/root/ResMimic/thirdparty/isaacgym/python/isaacgym/torch_utils.py:16: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  return torch.tensor(x, dtype=dtype, device=device, requires_grad=requires_grad)
+only got 568/1024 samples!
+Using VHACD cache directory '/root/.isaacgym/vhacd'
+Found existing convex decomposition for mesh '/root/InterMimic/isaacgym/src/intermimic/data/assets/objects/objects/largebox/largebox.obj'
+Found existing convex decomposition for mesh '/root/InterMimic/isaacgym/src/intermimic/data/assets/objects/objects/plasticbox/plasticbox.obj'
+Found existing convex decomposition for mesh '/root/InterMimic/isaacgym/src/intermimic/data/assets/objects/objects/smallbox/smallbox.obj'
+Found existing convex decomposition for mesh '/root/InterMimic/isaacgym/src/intermimic/data/assets/objects/objects/suitcase/suitcase.obj'
+/root/InterMimic/isaacgym/src/intermimic/env/tasks/intermimic.py:114: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  hoi_data = torch.load(data_path)[startk:]
+/root/ResMimic/thirdparty/miniconda3/envs/intermimic-gym/lib/python3.8/site-packages/gym/spaces/box.py:127: UserWarning: [33mWARN: Box bound precision lowered by casting to float32[0m
+  logger.warn(f"Box bound precision lowered by casting to {self.dtype}")
+Traceback (most recent call last):
+  File "/root/ResMimic/thirdparty/miniconda3/envs/intermimic-gym/lib/python3.8/runpy.py", line 194, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/root/ResMimic/thirdparty/miniconda3/envs/intermimic-gym/lib/python3.8/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/root/InterMimic/isaacgym/src/intermimic/run.py", line 283, in <module>
+    main()
+  File "/root/InterMimic/isaacgym/src/intermimic/run.py", line 278, in main
+    runner.run(vargs)
+  File "/root/ResMimic/thirdparty/miniconda3/envs/intermimic-gym/lib/python3.8/site-packages/rl_games/torch_runner.py", line 139, in run
+    self.run_train()
+  File "/root/ResMimic/thirdparty/miniconda3/envs/intermimic-gym/lib/python3.8/site-packages/rl_games/torch_runner.py", line 122, in run_train
+    agent = self.algo_factory.create(self.algo_name, base_name='run', config=self.config)  
+  File "/root/ResMimic/thirdparty/miniconda3/envs/intermimic-gym/lib/python3.8/site-packages/rl_games/common/object_factory.py", line 15, in create
+    return builder(**kwargs)
+  File "/root/InterMimic/isaacgym/src/intermimic/run.py", line 209, in <lambda>
+    runner.algo_factory.register_builder('intermimic', lambda **kwargs : intermimic_agent.InterMimicAgent(**kwargs))
+  File "/root/InterMimic/isaacgym/src/intermimic/learning/intermimic_agent.py", line 66, in __init__
+    super().__init__(base_name, config)
+  File "/root/InterMimic/isaacgym/src/intermimic/learning/common_agent.py", line 72, in __init__
+    a2c_common.A2CBase.__init__(self, base_name, config)
+  File "/root/InterMimic/isaacgym/src/intermimic/learning/a2c_common.py", line 172, in __init__
+    assert(self.batch_size % self.minibatch_size == 0)
+AssertionError
+Importing module 'rlgpu_38' (/root/ResMimic/thirdparty/isaacgym/python/isaacgym/_bindings/linux-x86_64/rlgpu_38.so)
+Setting seed: 1504
+Found checkpoint
+checkpoints/g1/sub8.pth
+Started to train
+Found checkpoint
+checkpoints/g1/sub8.pth
+Exact experiment name requested from command line: g1_29dof_with_hand
+RL device:  cuda:0
+rank: 0  local_rank: 0
+num_envs: 64
+num_actions: 43
+num_obs: 2153
+num_states: 0
+Box(-1.0, 1.0, (43,), float32) Box(-inf, inf, (2153,), float32)
+Env info:
+{'action_space': Box(-1.0, 1.0, (43,), float32), 'observation_space': Box(-inf, inf, (2153,), float32), 'amp_observation_space': Box(-inf, inf, (1211,), float32)}
