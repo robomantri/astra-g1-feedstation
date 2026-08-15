@@ -67,7 +67,7 @@ grep -aE "^\[astra\] (step|box|collision)" /root/oc_astra_diag.txt | sed 's/^/  
 # previews refuse. Constrained Baseline + yuv420p + faststart plays anywhere.
 FFMPEG="$(python -c 'import imageio_ffmpeg;print(imageio_ffmpeg.get_ffmpeg_exe())')"
 "$FFMPEG" -y -loglevel error -i "$RAW" \
-  -c:v libx264 -profile:v baseline -level 3.1 \
+  -vf "select=gte(n\\,2),setpts=PTS-STARTPTS" -c:v libx264 -profile:v baseline -level 3.1 \
   -pix_fmt yuv420p -movflags +faststart -r 30 -crf 18 "$OUT"
 rm -f "$RAW"
 
