@@ -15,9 +15,41 @@ import argparse
 import os
 import sys
 
+# ---- path resolution -------------------------------------------------------
+# Nothing below may hardcode /root: this file has to run both from a git clone
+# on a fresh machine and from the original layout on the L4 box. Each path is
+# env var -> vendored copy inside the repo -> legacy /root.
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_REPO = os.path.dirname(os.path.dirname(_HERE))   # <repo> when run from a clone
+
+
+def _pick(env, *candidates):
+    v = os.environ.get(env)
+    if v:
+        return v
+    for c in candidates:
+        if c and os.path.exists(c):
+            return c
+    return candidates[-1]
+
+
+OC_ROOT = _pick("OC_ROOT",
+                os.path.join(_REPO, "vendor", "omnicontact_g1"),
+                "/root/omnicontact_g1")
+ASTRA_WS = _pick("ASTRA_WS",
+                 os.path.join(_REPO, "vendor", "astra_workspace"),
+                 "/root/astra_workspace")
+# writable place for the video, diagnostics and probe dumps
+OUT_DIR = os.environ.get("OC_OUT_DIR") or (_HERE if os.access(_HERE, os.W_OK) else "/tmp")
+
+ASTRA_USD = os.path.join(ASTRA_WS, "astra_workspace.usd")
+CRATE_USD = os.path.join(ASTRA_WS, "assets", "crates", "euro_crate_600x400x120.usd")
+TEX_DIR = os.path.join(ASTRA_WS, "assets", "textures")
+LAYOUT_JSON = os.path.join(_HERE, "crate_layout.json")
+
 cli = argparse.ArgumentParser()
 cli.add_argument("--max-steps", type=int, default=3000)
-cli.add_argument("--record", default="/root/oc_astra.mp4")
+cli.add_argument("--record", default=os.path.join(OUT_DIR, "oc_astra.mp4"))
 cli.add_argument("--record-every", type=int, default=10)
 cli.add_argument("--half-dims", nargs=3, type=float, default=None)
 cli.add_argument("--loop", action="store_true", help="respawn the box and repeat")
@@ -31,7 +63,7 @@ simulation_app = SimulationApp({"headless": True})
 
 import numpy as np  # noqa: E402
 
-_DIAG = open("/root/oc_astra_diag.txt", "w", buffering=1)
+_DIAG = open(os.path.join(OUT_DIR, "oc_astra_diag.txt"), "w", buffering=1)
 
 
 def log(*a):
@@ -49,13 +81,10 @@ from isaacsim.core.prims import SingleArticulation, SingleRigidPrim  # noqa: E40
 from isaacsim.core.utils.stage import add_reference_to_stage  # noqa: E402
 from isaacsim.core.utils.types import ArticulationAction  # noqa: E402
 
-OC_ROOT = os.environ.get("OC_ROOT", "/root/omnicontact_g1")
 sys.path.insert(0, OC_ROOT)
 sys.path.insert(0, os.path.join(OC_ROOT, "deploy_omnicontact"))
 os.chdir(OC_ROOT)
 
-ASTRA_USD = "/root/astra_workspace/astra_workspace.usd"
-CRATE_USD = "/root/astra_workspace/assets/crates/euro_crate_600x400x120.usd"
 
 # CFgen plans its reference path assuming the robot STARTS AT THE ORIGIN.
 # Spawning the G1 elsewhere makes it follow a path meant for a different start
@@ -279,8 +308,8 @@ def place_crates(stage, offset):
     """Re-place the workspace crates as direct references (the nested ones do not draw)."""
     import json
     from pxr import Sdf, UsdShade
-    lay = json.load(open("/root/astra_demo/crate_layout.json"))
-    asset = "/root/astra_workspace/assets/crates/euro_crate_600x400x120.usd"
+    lay = json.load(open(LAYOUT_JSON))
+    asset = CRATE_USD
 
     # the originals report correct bounds but never render -- switch them off so
     # we do not end up with invisible duplicates in the physics/bbox picture
@@ -319,7 +348,7 @@ def fill_candy(stage, offset, seed=11):
     import json, math, random
     from pxr import Sdf, UsdShade, Vt
 
-    lay = json.load(open("/root/astra_demo/crate_layout.json"))
+    lay = json.load(open(LAYOUT_JSON))
     pile = lay["pile"]
     if not pile:
         return 0, 0
@@ -494,7 +523,7 @@ def main():
         _tx = _USm.Shader.Define(stage, _mp.AppendChild("concTex"))
         _tx.CreateIdAttr("UsdUVTexture")
         _tx.CreateInput("file", _Sdf.ValueTypeNames.Asset).Set(
-            "/root/astra_workspace/assets/textures/concrete.png")
+            os.path.join(TEX_DIR, "concrete.png"))
         _tx.CreateInput("wrapS", _Sdf.ValueTypeNames.Token).Set("repeat")
         _tx.CreateInput("wrapT", _Sdf.ValueTypeNames.Token).Set("repeat")
         _tx.CreateInput("st", _Sdf.ValueTypeNames.Float2).ConnectToSource(
@@ -588,7 +617,7 @@ def main():
     # ---- the euro crate ----
     if A.plain_box:
         make_carton(stage, "/World/crate", CRATE_HALF, 1.5,
-                    "/root/astra_workspace/assets/textures/cardboard.png")
+                    os.path.join(TEX_DIR, "cardboard.png"))
         crate = world.scene.add(SingleRigidPrim(
             prim_path="/World/crate", name="crate",
             position=np.array([TABLE_XY[0], TABLE_XY[1], CRATE_Z])))
@@ -692,7 +721,7 @@ def main():
                 _sh = _USh.Shader(_pp)
                 ins = {i.GetBaseName(): i.Get() for i in _sh.GetInputs()}
                 L.append(f"  {_pp.GetPath()}  id={_sh.GetIdAttr().Get()}  {ins}")
-        open("/root/probe2_out.txt", "w").write("\n".join(str(x) for x in L))
+        open(os.path.join(OUT_DIR, "probe2_out.txt"), "w").write("\n".join(str(x) for x in L))
         simulation_app.close()
         return
 
@@ -768,7 +797,7 @@ def main():
                 for _ in range(12):
                     world.step(render=True)
                 img = np.asarray(annot.get_data())[..., :3]
-                imageio.imwrite(f"/root/cam_{nm}.png", img)
+                imageio.imwrite(os.path.join(OUT_DIR, f"cam_{nm}.png"), img)
                 g = img.mean(axis=2)
                 dark = g.mean(axis=1) < 12
                 top = int(np.argmax(~dark)) if dark.any() else 0
