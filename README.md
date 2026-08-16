@@ -69,6 +69,46 @@ Both cost a lot of debugging; both are commented at their site in
 Every post-carry policy swap falls (7 variants tried) — only the carry policy
 keeps the robot upright indefinitely.
 
+### Why it is rendered offline, not run live
+
+The simulation cannot keep up with wall-clock time, and the reason is
+**physics, not graphics**.
+
+Physics steps at 1/200 s, so realtime needs **200 steps/s**. Measured on the
+L4 with rendering switched off entirely:
+
+| configuration | steps/s | vs realtime |
+|---|---|---|
+| no rendering at all | ~65 | **3.1x too slow** |
+| 1080p RTX render | ~9 | 22x too slow |
+
+The gap exists *before a single pixel is drawn*, so resolution is not the
+lever — 720p, 480p and fully headless all sit behind the same 3.1x wall.
+
+The obvious suspect was scene complexity, and it was wrong. Stripping the 110
+pile crates and 30,200 candy pellets made it **slower** (~41 steps/s), not
+faster: they are static, visual-only geometry that costs nothing in the step
+loop. The time goes to core Isaac stepping and the articulation solver.
+
+The one real lever is `physics_dt`. Going 1/200 -> 1/100 halves the step
+budget outright, but the OmniContact policy was trained on 50 Hz control
+derived from a 200 Hz sim, so changing that ratio changes what the policy
+sees. It is a stability trade, not a free win, and it is untested here.
+
+Live *viewing* is a separate question and is feasible: Isaac Sim's WebRTC
+livestream extension (`omni.kit.livestream.webrtc`) is installed and listens
+on port 49100. It would stream fine — the robot would simply move at about a
+third speed.
+
+Two honest limits on the above: these are single runs on a shared VM, so treat
+them as +-30%; and "not possible" is an inference from the two measurements,
+not the result of attempting a live render.
+
+**Footnote:** the exported video already plays **1.5x faster than simulated
+time**. One frame per 10 steps is 20 fps of sim time, encoded at 30 fps, so
+22.0 s of simulation becomes a 14.5 s video. Encode with `-r 20` instead of
+`-r 30` if you ever want playback to match sim time.
+
 ---
 
 ## Quick start
