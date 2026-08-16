@@ -8,9 +8,9 @@ physics-enabled Isaac Sim scene with a Unitree G1.
 
 ## G1 pick-and-place demo
 
-The headline deliverable: a Unitree G1 walks to a box on the floor beside the
-crate piles, picks it up two-handed, carries it to the conveyor and places it on
-the deck — then stays standing. Driven by the released
+The headline deliverable: a Unitree G1 walks to a crate on a pallet, picks it up
+two-handed, turns, carries it to the conveyor and places it flat on the rollers
+— then stays standing. Driven by the released
 [OmniContact](https://github.com/Ingrid789/OmniContact_sim2sim) `carrybox` ONNX
 policy, reused byte-for-byte; only the simulator adapter is ours.
 
@@ -25,9 +25,25 @@ Local copies live in `scripts/astra_demo/`; the output is
 
 | | |
 |---|---|
-| spawn | (8.50, 0.35), yaw 180° — among the crate piles |
-| pick | box on the floor at (7.00, 0.35) |
-| place | conveyor deck at (5.27, 0.30, **0.92**) = deck top + half box |
+| spawn | (7.00, 0.35), yaw 0° — between the pallet and the conveyor |
+| pick | crate on a 0.144 m pallet at (9.00, 0.35), centre z 0.244 |
+| place | conveyor deck at (4.50, 0.42, **0.87**) = deck top 0.77 + half crate 0.10 |
+
+The conveyor is rotated 90° about its own centre, so the robot loads the long
+side of the belt rather than its end. After grasping it turns ~180° and carries
+the crate across; the reference generator plans that turn itself.
+
+Measured limits, all established by bisection rather than assumed:
+
+- **Grasp height ceiling 0.41 m** (crate centre). 0.40 and 0.41 lift; 0.42 and
+  above never make contact.
+- **Crate 0.40 × 0.267 × 0.20 m.** 0.40 length is the reach limit — the hands
+  target the object's mid-plane and the trained max half-length is 0.20. The
+  0.20 height stops it tumbling between the palms; at 0.113 it landed on its
+  end. Anything 0.60 long (a real euro crate, `SM_Crate_A07`) cannot be picked
+  in any orientation.
+- **Walk 1.6× slower** than default (`OC_WALK=0.010` vs 0.016), so the gait
+  reads on camera.
 
 Tunable without editing code: `OC_DOME` / `OC_KEY` (light intensities),
 `OC_RES`, `OC_SPP`, `OC_ACCUM`, `OC_PATHTRACE`, and `OC_CAMSWEEP=1` /
@@ -50,9 +66,8 @@ Both cost a lot of debugging; both are commented at their site in
    x/y components sign-flip and the robot collapses within a second. Feed
    `R.T @ get_angular_velocity()`, same as `gravity_ori`.
 
-Known limits, established by measurement: picks above ~0.35 m fail (the policy
-was trained on floor picks), and every post-carry policy swap falls (7 variants
-tried) — only the carry policy keeps the robot upright indefinitely.
+Every post-carry policy swap falls (7 variants tried) — only the carry policy
+keeps the robot upright indefinitely.
 
 ---
 

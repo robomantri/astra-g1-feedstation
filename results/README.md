@@ -116,3 +116,33 @@ Smoke test hit `assert(batch_size % minibatch_size == 0)`: the cfg wants
 `horizon_length 32`, `minibatch_size 16384`, `numEnvs 2048`, so `--num_envs`
 must keep `num_envs * 32` divisible by 16384 (i.e. multiples of 512).
 See `logs/g1_train_smoke.log`.
+
+## 20 — pallet to conveyor, rotated belt (current)
+
+`20_ASTRA_pallet_to_conveyor_rot90.mp4` — the demo `run_astra_demo.sh` now
+produces. Layout left to right: pallet with the crate (x 9.0), robot (x 7.0),
+conveyor turned 90 degrees (x 3.68..4.84) so the robot loads its long side.
+The G1 walks to the pallet, picks the crate, turns ~180 degrees and places it
+flat on the rollers at (4.50, 0.42, 0.87) = deck top 0.77 + half height 0.10.
+
+Measured limits behind these numbers:
+
+- **Grasp height ceiling is 0.41 m** (crate centre). 0.40 and 0.41 lift;
+  0.42, 0.44, 0.45, 0.75 and 0.90 do not — the robot reaches the standoff and
+  never closes. The pallet puts the centre at 0.244.
+- **Crate is 0.40 x 0.267 x 0.20 m.** Length 0.40 is the policy's reach limit
+  (the hands go to the object's mid-plane, and the trained max half-length is
+  0.20). The 0.20 height is what stops it tumbling between the palms; at 0.113
+  it landed on its end.
+- **Walk is 1.6x slower** (`OC_WALK=0.010` against a 0.016 default) so the
+  gait is legible.
+- Carried crate is held upright each step — roll and pitch cancelled, position
+  left to physics. A kinematic weld was tried first and throws the robot: an
+  immovable body means the grip reaction has nowhere to go.
+
+`20_ASTRA_pallet_to_conveyor_closeup.png` — the placement, showing the matte
+black head/hands.
+`20_ASTRA_pile_pallets.jpg` — the three crate piles, equally spaced at 0.30 m,
+each on a pallet inside a painted floor box.
+`isaac_asset_contact_sheet.png` — every crate/bin/conveyor asset available,
+with measured dimensions.

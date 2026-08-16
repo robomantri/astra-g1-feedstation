@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 #
-# ASTRA feed-station demo — Unitree G1 picks a box off the floor beside the
-# crate piles and places it on the conveyor, shot against the Astra branded
-# walls.
+# ASTRA feed-station demo — Unitree G1 picks a crate off a pallet, turns, and
+# places it on the conveyor, shot against the Astra branded walls.
+#
+# Layout, left to right: pallet with the crate (x 9.0), robot (x 7.0), and the
+# conveyor turned 90 degrees so the robot loads its long side (x 3.68..4.84).
 #
 # Produces a directly playable astra_g1_conveyor_wallside.mp4.
 #
@@ -89,16 +91,37 @@ export OC_SPP="${OC_SPP:-48}"
 export OC_ACCUM="${OC_ACCUM:-6}"
 export OC_RES="${OC_RES:-1920x1080}"
 
+# --- demo parameters, all measured -------------------------------------------
+# OC_WALK   reference waypoint spacing, metres. 0.016 is CfGenCarryBox's
+#           default; 0.010 stretches the walk 1.6x so the gait is legible.
+# OC_GRASP_Z height of the crate CENTRE on the pallet. The grasp fails above
+#           0.41 (verified: 0.40 and 0.41 lift, 0.42 and up do not), so 0.244
+#           sits on a 0.144 m euro pallet with margin.
+# half-dims  0.200 0.134 0.100 -> a 0.40 x 0.267 x 0.20 crate. Length 0.40 is
+#           the policy's limit (reach = half-length, trained max 0.20) and the
+#           0.20 height stops it tumbling between the palms mid-carry.
+# skin-height the crate MESH is 0.13 while its collider is 0.20; the visual is
+#           bottom-aligned inside it so the crate still sits flush on surfaces.
+export OC_WALK="${OC_WALK:-0.010}"
+export OC_GRASP_Z="${OC_GRASP_Z:-0.244}"
+CRATE_SKIN="${CRATE_SKIN:-$ASTRA_WS/assets/crates/euro_crate_600x400x120.usd}"
+
 echo "[demo] policy : $POLICY"
 echo "[demo] scene  : $ASTRA_USD"
 echo "[demo] output : $OUT"
-echo "[demo] running (~5 min: 1080p, 3000 sim steps)…"
+echo "[demo] crate  : $CRATE_SKIN"
+echo "[demo] running (~8 min: 1080p, 4400 sim steps at 1.6x slower walk)…"
 
 RUNLOG="$OC_OUT_DIR/run.log"
 rm -f "$RAW" "$OUT"
+# 4400 steps: the slower walk plus the turn-with-crate needs ~3300 to place,
+# and the rest is a short hold on the finished shot.
 "$PY" "$DEMO" \
-  --max-steps 3000 \
-  --plain-box --half-dims 0.15 0.15 0.15 \
+  --max-steps 4400 \
+  --plain-box \
+  --crate-skin "$CRATE_SKIN" \
+  --half-dims 0.200 0.134 0.100 \
+  --skin-height 0.13 \
   --record "$RAW" \
   > "$RUNLOG" 2>&1 || {
     echo "[demo] FAILED — see $RUNLOG" >&2

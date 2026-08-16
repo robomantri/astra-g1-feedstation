@@ -12,6 +12,7 @@ So y = 5.10 is the clear working lane down the middle of the station.
   G1      (7.00, 5.10)              <- open floor east of the table
 """
 import argparse
+import math
 import os
 import sys
 
@@ -44,6 +45,37 @@ OUT_DIR = os.environ.get("OC_OUT_DIR") or (_HERE if os.access(_HERE, os.W_OK) el
 
 ASTRA_USD = os.path.join(ASTRA_WS, "astra_workspace.usd")
 CRATE_USD = os.path.join(ASTRA_WS, "assets", "crates", "euro_crate_600x400x120.usd")
+# SM_Crate_A07_Yellow_01 does NOT render in this stage -- verified as a direct
+# reference, via its inner SubUSD, and as a visual skin (hiding the collider
+# left the pallet visibly empty). Its physics works, so it silently gives an
+# invisible crate. It is also authored in centimetres, and SingleRigidPrim
+# overwrites the unit-conversion xform op, which makes it 100x too large.
+# Deliberately not vendored; use the euro crate below instead.
+SM_CRATE = os.path.join(ASTRA_WS, "assets", "Isaac", "Props", "PackingTable",
+                        "props", "SM_Crate_A07_Yellow_01", "SubUSDs",
+                        "SM_Crate_A07_01_1.usd")
+# the long side of the belt instead of its end.
+CONV_ROT = float(os.environ.get("OC_CONV_ROT", "90"))
+# Pivot for the prim ops, calibrated by measurement: the conveyor sits under
+# transforms whose composition order is not obvious, so the pivot that lands
+# the belt back on its own centre was solved from three probe renders --
+#   centre(px,py) = (5.62,-1.01) + px*(-1,1) + py*(-1,-1)
+# and (4.26, 0.35) needs (1.36, 0.00).
+CONV_CX = float(os.environ.get("OC_CONV_PX", "1.36"))
+CONV_CY = float(os.environ.get("OC_CONV_PY", "0.00"))
+# The deck crates are placed from LAYOUT coordinates, so they rotate about the
+# conveyor centre expressed in that frame instead.
+CONV_CTR_WS = (2.54, 5.10)
+
+# Links the real G1 paints black, read from Unitree's g1_29dof_rev_1_0.urdf
+# (material "dark", rgba 0.2). Matched against the prim path, so the trailing
+# _link is dropped where the MJCF names differ. The rubber hands are black on
+# the hardware and every hand link is dark in the inspire-hand URDF, so they
+# are in the set even though this URDF variant leaves them white.
+DARK_LINKS = ("pelvis", "hip_pitch", "ankle_roll", "logo", "head",
+              "hand", "palm")
+
+PILE_PALLET_H = 0.144      # euro pallet under each crate pile
 TEX_DIR = os.path.join(ASTRA_WS, "assets", "textures")
 LAYOUT_JSON = os.path.join(_HERE, "crate_layout.json")
 
@@ -53,9 +85,22 @@ cli.add_argument("--record", default=os.path.join(OUT_DIR, "oc_astra.mp4"))
 cli.add_argument("--record-every", type=int, default=10)
 cli.add_argument("--half-dims", nargs=3, type=float, default=None)
 cli.add_argument("--loop", action="store_true", help="respawn the box and repeat")
+cli.add_argument("--skin-height", type=float, default=None,
+                 help="visual crate height (m); collider keeps its own")
+cli.add_argument("--crate-skin", default=None,
+                 help='visual-only crate mesh over the physics box; "sm" selects SM_Crate_A07')
+cli.add_argument("--crate-yaw", type=float, default=0.0,
+                 help="spawn yaw of the picked crate, degrees")
+cli.add_argument("--crate-usd", default=None,
+                 help='crate asset to pick; "sm" selects SM_Crate_A07_Yellow_01')
 cli.add_argument("--plain-box", action="store_true",
                  help="use a plain cuboid instead of the euro crate USD")
 A = cli.parse_args()
+
+# CRATE_USD is resolved above, before argparse exists, so apply the
+# --crate-usd override here instead.
+if A.crate_usd:
+    CRATE_USD = SM_CRATE if A.crate_usd == "sm" else A.crate_usd
 
 from isaacsim import SimulationApp  # noqa: E402
 
@@ -74,7 +119,7 @@ def log(*a):
 
 import omni.usd  # noqa: E402
 import omni.kit.commands  # noqa: E402
-from pxr import Gf, Usd, UsdGeom, UsdPhysics, UsdLux  # noqa: E402
+from pxr import Gf, Sdf, Usd, UsdGeom, UsdPhysics, UsdLux  # noqa: E402
 from isaacsim.core.api import World  # noqa: E402
 from isaacsim.core.api.objects import DynamicCuboid, FixedCuboid, GroundPlane  # noqa: E402
 from isaacsim.core.prims import SingleArticulation, SingleRigidPrim  # noqa: E402
@@ -106,14 +151,29 @@ CRATE_HALF = tuple(A.half_dims) if A.half_dims else (0.30, 0.20, 0.06)
 # the proven run (robot 1.5 m behind the box, box 1.8 m from the goal), rotated
 # 180 degrees. Lane y = 0.35 clears the piles (y >= 1.20) by 0.85 m.
 LANE_Y = 0.35
-CRATE_XY = (7.00, LANE_Y)                  # 1.5 m ahead of the spawn
+CRATE_XY = (9.00, LANE_Y)                  # on the pallet, 2.0 m from the robot
 TABLE_TOP = 0.35                           # low stand the box starts on
-CRATE_Z = CRATE_HALF[2]                    # box on the floor (known-good)
+# The grasp reference puts BOTH hands at the object CENTRE height
+# (CFgen_meta2_carrybox._grasp_targets: contact_center = obj_pos). The policy
+# was trained on a 0.30 m cube resting on the floor, i.e. a centre at z 0.15.
+# A 0.17 m crate laid on the floor has its centre at 0.085 and the hands are
+# asked to meet at floor level, so the grasp never lands. Keep the centre at
+# the trained height and put a pallet under anything shorter.
+# Height the crate centre is presented at. 0.15 matches the trained cube on
+# the floor; raising it puts the crate on a stand so the robot can reach in
+# standing upright instead of crouched, which is what limits forward reach.
+GRASP_CENTRE_Z = float(os.environ.get("OC_GRASP_Z", "0.15"))
+CRATE_Z = max(CRATE_HALF[2], GRASP_CENTRE_Z)
+PALLET_H = CRATE_Z - CRATE_HALF[2]         # 0 for the 0.30 cube, 0.065 for SM
 CONVEYOR_TOP = 0.77                        # roller top, workspace z
-GOAL = (5.00, LANE_Y, CONVEYOR_TOP + CRATE_HALF[2])  # ON the deck; it overshoots ~0.28 m,
+# Rotated, the deck is only 1.16 m wide in x (3.68..4.84) and the crate lands
+# 0.25-0.75 m short of the goal depending on where the robot stops. Aiming at
+# 3.75 puts it mid-deck across that whole range; 4.15 let it land on the edge
+# and topple off.
+GOAL = (3.75, LANE_Y, CONVEYOR_TOP + CRATE_HALF[2])  # ON the deck; it overshoots ~0.28 m,
                                                      # so aim in from the x=5.62 edge
-G1_XY = (8.50, LANE_Y)                     # out among the crate piles
-G1_YAW = 3.14159265                        # facing -x, toward the conveyor
+G1_XY = (7.00, LANE_Y)                     # between the table and the conveyor
+G1_YAW = 0.0                               # facing +x, toward the table
                                            # start quat is antipodal (w~0) and the robot spins out
 TABLE_XY = CRATE_XY
 
@@ -179,6 +239,52 @@ def build_runner(task="carrybox", init=None, goal=None):
     return r
 
 
+def skin_crate(stage, prim_path, asset, target_full, visual_h=None):
+    """Scale a crate mesh onto the physics box as a visual-only child.
+
+    No collision is applied to the skin -- the box underneath keeps its convex
+    hull, so the grasp the policy sees is exactly the one it was trained on.
+    """
+    from pxr import Sdf, UsdShade
+    skin = prim_path + "/skin"
+    add_reference_to_stage(usd_path=asset, prim_path=skin)
+    pr = stage.GetPrimAtPath(skin)
+    xf = UsdGeom.Xformable(pr)
+    xf.ClearXformOpOrder()                       # measure the raw asset first
+    bb = UsdGeom.BBoxCache(Usd.TimeCode.Default(),
+                           ["default", "render", "proxy", "guide"])
+    r = bb.ComputeLocalBound(pr).ComputeAlignedRange()
+    mn, mx = np.array(r.GetMin()), np.array(r.GetMax())
+    size = np.maximum(mx - mn, 1e-6)
+    # Footprint fills the collider; height may be shorter than it.
+    tf = np.array(target_full, dtype=float)
+    sc = tf / size
+    if visual_h:
+        sc[2] = float(visual_h) / size[2]
+    ctr = (mn + mx) / 2.0
+    # ops are [translate, scale] -> p * S + T. x/y centre on the box origin;
+    # z is BOTTOM-aligned to the collider's underside, so a shorter visual
+    # still sits flush on whatever the collider is resting on instead of
+    # floating half-way up it.
+    t = -ctr * sc
+    t[2] = -tf[2] / 2.0 - mn[2] * sc[2]
+    xf.AddTranslateOp().Set(Gf.Vec3d(*t))
+    xf.AddScaleOp().Set(Gf.Vec3f(*sc))
+    # VISUAL ONLY. The crate asset ships CollisionAPI/RigidBodyAPI of its own,
+    # which would silently add a second collider to the body and change the
+    # grasp physics -- the robot toppled mid-carry until these were switched
+    # off. The hidden carton child is the only collider.
+    for _pp in Usd.PrimRange(pr):
+        if _pp.HasAPI(UsdPhysics.CollisionAPI):
+            UsdPhysics.CollisionAPI(_pp).CreateCollisionEnabledAttr(False)
+        if _pp.HasAPI(UsdPhysics.RigidBodyAPI):
+            UsdPhysics.RigidBodyAPI(_pp).CreateRigidBodyEnabledAttr(False)
+
+    # the collider box is hidden with visibility, not opacity -- see the
+    # crate construction in main(); RTX draws opacity-0 UsdPreviewSurface solid
+    return size, sc
+
+
 def make_carton(stage, path, half, mass, tex):
     """A textured box mesh: 24 verts, per-face UVs, rigid body."""
     from pxr import Sdf, UsdShade, Vt, Gf
@@ -241,35 +347,48 @@ def make_carton(stage, path, half, mass, tex):
     UsdPhysics.MassAPI.Apply(pr).CreateMassAttr(mass)
     return pr
 
-def metalize(stage, root_path, rgb=(0.68, 0.70, 0.73), rough=0.28, metal=0.95):
-    """Bind one metallic material to every mesh under root_path."""
-    from pxr import Sdf, UsdShade
-    mp = root_path + "/_metal"
-    mat = UsdShade.Material.Define(stage, Sdf.Path(mp))
-    sh = UsdShade.Shader.Define(stage, Sdf.Path(mp + "/surf"))
-    sh.CreateIdAttr("UsdPreviewSurface")
-    sh.CreateInput("diffuseColor", Sdf.ValueTypeNames.Color3f).Set(Gf.Vec3f(*rgb))
-    sh.CreateInput("metallic", Sdf.ValueTypeNames.Float).Set(metal)
-    sh.CreateInput("roughness", Sdf.ValueTypeNames.Float).Set(rough)
-    mat.CreateSurfaceOutput().ConnectToSource(
-        sh.CreateOutput("surface", Sdf.ValueTypeNames.Token))
+def shade_g1(stage, shell_rgb=None, dark_rgb=(0.045, 0.045, 0.05)):
+    """Shade the G1 like the real robot: glossy grey plastic shell, black
+    head and hands.
+
+    Head/hand meshes are matched on prim path -- the MJCF link names carry
+    through, so head_link, *_rubber_hand, *_hand_*_link and *_palm_link all
+    hit. The wrist_pitch/roll/yaw links deliberately do not, since those are
+    grey on the real robot.
+    """
+    from pxr import UsdShade
+    # 0.79 photographed as white; 0.52 keeps the plastic sheen but reads as
+    # grey. OC_G1_GREY overrides without editing.
+    if shell_rgb is None:
+        _g = float(os.environ.get("OC_G1_GREY", "0.52"))
+        shell_rgb = (_g, _g * 1.01, _g * 1.04)
+    shell = plastic_mat(stage, "/World/_g1_shell", shell_rgb, rough=0.15)
+    # matte: high roughness and low specular, so it reads as the real robot's
+    # black rather than piano lacquer
+    black = plastic_mat(stage, "/World/_g1_black", dark_rgb, rough=0.80,
+                        spec=0.12)
     # The MJCF importer does not nest geometry under the robot xform -- it puts
     # it in top-level /meshes, /visuals scopes. So sweep the whole stage and take
     # every mesh that is not the workspace, the crate or the ground.
     skip = ("/World/Astra", "/World/crate", "/World/ground", "/World/table",
             "/World/CratesVis", "/World/_crate")
-    n = 0
+    n_shell = n_dark = 0
     for pr in stage.Traverse():
         if not pr.IsA(UsdGeom.Mesh):
             continue
         pth = pr.GetPath().pathString
         if any(pth.startswith(k) for k in skip):
             continue
-        UsdShade.MaterialBindingAPI.Apply(pr).Bind(mat)
-        n += 1
-    return n
+        low = pth.lower()
+        is_dark = any(k in low for k in DARK_LINKS)
+        UsdShade.MaterialBindingAPI.Apply(pr).Bind(
+            black if is_dark else shell,
+            bindingStrength=UsdShade.Tokens.strongerThanDescendants)
+        n_dark += is_dark
+        n_shell += not is_dark
+    return n_shell, n_dark
 
-def plastic_mat(stage, path, rgb, rough=0.34):
+def plastic_mat(stage, path, rgb, rough=0.34, spec=0.4):
     """Moulded-plastic look: non-metallic, semi-glossy."""
     from pxr import Sdf, UsdShade
     mat = UsdShade.Material.Define(stage, Sdf.Path(path))
@@ -278,7 +397,7 @@ def plastic_mat(stage, path, rgb, rough=0.34):
     sh.CreateInput("diffuseColor", Sdf.ValueTypeNames.Color3f).Set(Gf.Vec3f(*rgb))
     sh.CreateInput("roughness", Sdf.ValueTypeNames.Float).Set(rough)
     sh.CreateInput("metallic", Sdf.ValueTypeNames.Float).Set(0.0)
-    sh.CreateInput("specular", Sdf.ValueTypeNames.Float).Set(0.4)
+    sh.CreateInput("specular", Sdf.ValueTypeNames.Float).Set(spec)
     mat.CreateSurfaceOutput().ConnectToSource(
         sh.CreateOutput("surface", Sdf.ValueTypeNames.Token))
     return mat
@@ -299,17 +418,21 @@ def pile_dx(c, grp="pile"):
     "< 8.0" middle-grey test, which is why the group has to be passed in."""
     if grp == "conveyor":
         return -0.50
+    # Equal 0.30 m gaps. Base world footprints are red 6.71..7.91,
+    # mid grey 8.22..9.42, far grey 9.92..11.12 -- gaps of 0.31 and 0.50.
     if c["red"]:
-        return 0.20
-    return 0.0933 if c["t"][0] < 8.0 else 0.0
+        return 0.21
+    return 0.20 if c["t"][0] < 8.0 else 0.0
 
 
 def place_crates(stage, offset):
     """Re-place the workspace crates as direct references (the nested ones do not draw)."""
-    import json
+    import json, math
     from pxr import Sdf, UsdShade
     lay = json.load(open(LAYOUT_JSON))
-    asset = CRATE_USD
+    # the piles always use the euro crate, even when the robot picks something
+    # else, so this must not follow --crate-usd
+    asset = os.path.join(ASTRA_WS, "assets", "crates", "euro_crate_600x400x120.usd")
 
     # the originals report correct bounds but never render -- switch them off so
     # we do not end up with invisible duplicates in the physics/bbox picture
@@ -323,23 +446,46 @@ def place_crates(stage, offset):
 
     root = UsdGeom.Scope.Define(stage, Sdf.Path("/World/CratesVis"))
     n = 0
-    for grp in ("conveyor", "pile"):
+    # The two crates that ship on the deck sit exactly where the robot now
+    # places, once the belt is turned 90 degrees. Drop them.
+    _groups = ("pile",) if os.environ.get("OC_DECK_CRATES", "0") != "1" \
+        else ("conveyor", "pile")
+    for grp in _groups:
         for c in lay[grp]:
-            _dx = pile_dx(c, grp)
+            _x = c["t"][0] + pile_dx(c, grp)
+            _y = c["t"][1]
+            _q = Gf.Quatf(c["q"][0], Gf.Vec3f(c["q"][1], c["q"][2], c["q"][3]))
+            if grp == "conveyor" and abs(CONV_ROT) > 1e-6:
+                # these sit ON the belt, so they have to turn with it: rotate
+                # the position about the conveyor centre and spin the crate by
+                # the same angle
+                _a = math.radians(CONV_ROT)
+                _px, _py = CONV_CTR_WS
+                _vx, _vy = _x - _px, _y - _py
+                _x = _px + _vx * math.cos(_a) - _vy * math.sin(_a)
+                _y = _py + _vx * math.sin(_a) + _vy * math.cos(_a)
+                _q = Gf.Quatf(math.cos(_a / 2),
+                              Gf.Vec3f(0.0, 0.0, math.sin(_a / 2))) * _q
             pth = f"/World/CratesVis/{grp}_{c['n']}"
             add_reference_to_stage(usd_path=asset, prim_path=pth)
             pr = stage.GetPrimAtPath(pth)
             xf = UsdGeom.Xformable(pr)
-            xf.AddTranslateOp().Set(Gf.Vec3d(c["t"][0] + offset[0] + _dx,
-                                             c["t"][1] + offset[1],
-                                             c["t"][2] + offset[2]))
-            q = c["q"]
-            xf.AddOrientOp().Set(Gf.Quatf(q[0], Gf.Vec3f(q[1], q[2], q[3])))
+            _zl = PILE_PALLET_H if grp == "pile" else 0.0
+            xf.AddTranslateOp().Set(Gf.Vec3d(_x + offset[0], _y + offset[1],
+                                             c["t"][2] + offset[2] + _zl))
+            xf.AddOrientOp().Set(_q)
             # strongerThanDescendants: otherwise the crate asset's own mesh-level
             # material wins and every pile comes out grey
             UsdShade.MaterialBindingAPI.Apply(pr).Bind(
                 red if c["red"] else grey,
                 bindingStrength=UsdShade.Tokens.strongerThanDescendants)
+            # The piles are scenery: make them STATIC. Left dynamic and lifted
+            # onto pallets, 108 crates free-fall 0.144 m on frame 1 and the
+            # solver disturbance knocks the robot over during the grasp.
+            # Disabling collision instead would drop them through the floor.
+            for _q in Usd.PrimRange(pr):
+                if _q.HasAPI(UsdPhysics.RigidBodyAPI):
+                    UsdPhysics.RigidBodyAPI(_q).CreateRigidBodyEnabledAttr(False)
             n += 1
     return n
 
@@ -375,7 +521,7 @@ def fill_candy(stage, offset, seed=11):
             pts.append((
                 c["t"][0] + offset[0] + pile_dx(c) + rng.uniform(-ax, ax),
                 c["t"][1] + offset[1] + rng.uniform(-ay, ay),
-                c["t"][2] + offset[2] + rng.uniform(z0, z1),
+                c["t"][2] + offset[2] + PILE_PALLET_H + rng.uniform(z0, z1),
             ))
 
     root = Sdf.Path("/World/Candy")
@@ -489,6 +635,26 @@ def main():
         UsdPhysics.CollisionAPI(pp).CreateCollisionEnabledAttr(False)
         n_off += 1
     log(f"[astra] collision: disabled {n_off}, kept {n_keep} (conveyor)")
+    # ---- rotate the conveyor 90 degrees about its own centre --------------
+    # Appended, not prepended: USD applies xformOpOrder left to right on a row
+    # vector, so M = existing * T(-c) * R * T(+c) puts the rotation in the
+    # parent frame, after the asset's own placement.
+    _cvp = stage.GetPrimAtPath("/World/Astra/Conveyor")
+    if _cvp and _cvp.IsValid() and abs(CONV_ROT) > 1e-6:
+        _cv = UsdGeom.Xformable(_cvp)
+        _cv.AddTranslateOp(opSuffix="rotPivotNeg").Set(Gf.Vec3d(-CONV_CX, -CONV_CY, 0.0))
+        _cv.AddRotateZOp(opSuffix="rot90").Set(CONV_ROT)
+        _cv.AddTranslateOp(opSuffix="rotPivotPos").Set(Gf.Vec3d(CONV_CX, CONV_CY, 0.0))
+        log(f"[astra] conveyor rotated {CONV_ROT:g} deg about ws "
+            f"({CONV_CX}, {CONV_CY})")
+        _bbz = UsdGeom.BBoxCache(Usd.TimeCode.Default(),
+                                 ["default", "render", "proxy", "guide"])
+        _rz = _bbz.ComputeWorldBound(_cvp).ComputeAlignedRange()
+        if not _rz.IsEmpty():
+            _m0, _m1 = _rz.GetMin(), _rz.GetMax()
+            log(f"[astra] conveyor world bbox x {_m0[0]:.2f}..{_m1[0]:.2f} "
+                f"y {_m0[1]:.2f}..{_m1[1]:.2f} z {_m0[2]:.2f}..{_m1[2]:.2f}")
+
     # ---- dark upper wall above the 3.11 m panels: low camera angles were
     # seeing void through the strip above the back wall (33-118 black rows).
     # A horizontal ceiling is wrong here -- it blocks the dome AND the 6-deg
@@ -573,7 +739,34 @@ def main():
     _rng = _bc.ComputeWorldBound(_cv).ComputeAlignedRange()
     if not _rng.IsEmpty():
         _mn, _mx = _rng.GetMin(), _rng.GetMax()
-        log(f"[astra] crate piles world bounds x {_mn[0]:.2f}..{_mx[0]:.2f} "
+        # A crate already on the belt, at the far end -- the robot places at
+    # ~(4.41, 0.32), so y 1.30 keeps it well clear while staying on the deck
+    # (which spans y -1.01..1.71 once the conveyor is turned 90 degrees).
+    _dk = "/World/CratesVis/deck_far"
+    add_reference_to_stage(
+        usd_path=os.path.join(ASTRA_WS, "assets", "crates",
+                              "euro_crate_600x400x120.usd"),
+        prim_path=_dk)
+    _dkp = stage.GetPrimAtPath(_dk)
+    _dkx = UsdGeom.Xformable(_dkp)
+    _dkx.AddTranslateOp().Set(Gf.Vec3d(4.26, 1.30, 0.77))
+    # Match the crate the robot places: same size and same orientation. The
+    # placed crate ends up yawed ~175 deg, so its 0.40 long axis lies along
+    # world x -- this one therefore gets 0 deg, not the 90 it had. Scale is the
+    # skin scale, 0.60x0.40x0.12 -> 0.40x0.267x0.13.
+    _dkx.AddRotateZOp().Set(0.0)
+    _dkx.AddScaleOp().Set(Gf.Vec3f(0.6667, 0.6675, 1.0833))
+    for _pp in Usd.PrimRange(_dkp):
+        if _pp.HasAPI(UsdPhysics.RigidBodyAPI):
+            UsdPhysics.RigidBodyAPI(_pp).CreateRigidBodyEnabledAttr(False)
+    from pxr import UsdShade as _USd
+    _dgrey = plastic_mat(stage, "/World/_deck_crate_grey", (0.55, 0.56, 0.59),
+                         rough=0.28)
+    _USd.MaterialBindingAPI.Apply(_dkp).Bind(
+        _dgrey, bindingStrength=_USd.Tokens.strongerThanDescendants)
+    log("[astra] deck crate: 0.40x0.267x0.13, yaw 0, matching the placed crate")
+
+    log(f"[astra] crate piles world bounds x {_mn[0]:.2f}..{_mx[0]:.2f} "
             f"y {_mn[1]:.2f}..{_mx[1]:.2f} z {_mn[2]:.2f}..{_mx[2]:.2f}")
     # Do NOT disable collision on these: they are rigid bodies resting on the
     # floor, so removing their colliders drops them through it and leaves the
@@ -581,6 +774,42 @@ def main():
     # anyway -- the pile-side collapse was the body/world velocity-frame bug.
     _ncr, _npel = fill_candy(stage, ASTRA_OFFSET)
     log(f"[astra] candy: {_npel} pellets across {_ncr} top crates")
+    # ---- pallet + painted floor box under each pile ----------------------
+    # Footprints are 1.20 x 1.20 at y 1.55..2.75; after the spacing fix the
+    # three sit at x 6.92..8.12, 8.42..9.62, 9.92..11.12.
+    from pxr import UsdShade
+    _pal = plastic_mat(stage, "/World/_pile_pallet", (0.42, 0.31, 0.20),
+                       rough=0.85, spec=0.1)
+    _mark = plastic_mat(stage, "/World/_floor_mark", (0.95, 0.76, 0.05),
+                        rough=0.55, spec=0.2)
+    for _i, _cx in enumerate((7.52, 9.02, 10.52)):
+        _cy = 2.15
+        _pp = UsdGeom.Cube.Define(stage, f"/World/PileBase/pallet_{_i}")
+        _px = UsdGeom.Xformable(_pp.GetPrim())
+        _px.AddTranslateOp().Set(Gf.Vec3d(_cx, _cy, PILE_PALLET_H / 2.0))
+        # Flush with the 1.20 pile footprint. At 1.28 the pallets nearly
+        # touched (pile spacing is 1.50) and read as one continuous slab from
+        # above.
+        # UsdGeom.Cube spans -1..1 (size 2), so scales here are HALF-extents.
+        # Setting 1.20 made 2.4 m pallets that overlapped into one giant slab.
+        _px.AddScaleOp().Set(Gf.Vec3f(0.60, 0.60, PILE_PALLET_H / 2.0))
+        UsdShade.MaterialBindingAPI.Apply(_pp.GetPrim()).Bind(
+            _pal, bindingStrength=UsdShade.Tokens.strongerThanDescendants)
+        # painted outline on the floor: four flat strips, not a filled slab
+        # Outline must clear the pallet (half 0.60) and its neighbour: pile
+        # centres are 1.50 apart, so +-0.68 leaves 0.05 between adjacent boxes.
+        _oh, _w = 0.68, 0.07
+        for _j, (_ox, _oy, _sx, _sy) in enumerate((
+                (0.0, +_oh, 2 * _oh + _w, _w), (0.0, -_oh, 2 * _oh + _w, _w),
+                (+_oh, 0.0, _w, 2 * _oh + _w), (-_oh, 0.0, _w, 2 * _oh + _w))):
+            _mp = UsdGeom.Cube.Define(stage, f"/World/PileBase/mark_{_i}_{_j}")
+            _mx = UsdGeom.Xformable(_mp.GetPrim())
+            _mx.AddTranslateOp().Set(Gf.Vec3d(_cx + _ox, _cy + _oy, 0.004))
+            _mx.AddScaleOp().Set(Gf.Vec3f(_sx / 2.0, _sy / 2.0, 0.004))
+            UsdShade.MaterialBindingAPI.Apply(_mp.GetPrim()).Bind(
+                _mark, bindingStrength=UsdShade.Tokens.strongerThanDescendants)
+    log("[astra] 3 pile pallets + painted floor boxes")
+
     _nh = fill_hopper(stage)
     log(f"[astra] hopper: {_nh} mixed pellets in the trough")
 
@@ -606,22 +835,61 @@ def main():
         position=np.array([G1_XY[0], G1_XY[1], 0.793]),
         orientation=np.array([np.cos(_hy), 0.0, 0.0, np.sin(_hy)])))
 
-    # ---- table the crate starts on ----
-    if False:
+    # ---- pallet under the crate, so its centre reaches the grasp height ----
+    if PALLET_H > 0.01:
         world.scene.add(FixedCuboid(
             prim_path="/World/table", name="table",
-            position=np.array([TABLE_XY[0], TABLE_XY[1], TABLE_TOP / 2.0]),
-            scale=np.array([0.50, 0.70, TABLE_TOP]),
-            color=np.array([0.55, 0.55, 0.58])))
+            # Above 0.5 m the stand becomes a FLOATING slab: only the top
+            # 0.12 m exists, so the robot can step right up to the crate
+            # without its knees fouling table legs, and the slab reads as a
+            # suspended platform. Below that, a solid table/pallet as before.
+            # Pallet CENTRED under the crate, and that is load-bearing: the
+            # grasp itself slides the crate ~0.2 m toward the robot before the
+            # lift, so the 0.20 near-side lip is exactly what absorbs it -- the
+            # crate ends up ON the edge as it is picked. Every near-edge start
+            # tested (flush, 6 cm lip, 6 cm lip + high friction) either slid
+            # off, tripped the robot, or killed the grasp.
+            position=np.array([TABLE_XY[0],
+                               TABLE_XY[1],
+                               PALLET_H - 0.06 if PALLET_H > 0.5
+                               else PALLET_H / 2.0]),
+            scale=np.array([0.70, 0.60, 0.12]) if PALLET_H > 0.5
+            else np.array([0.90, 0.70, PALLET_H]) if PALLET_H > 0.20
+            else np.array([0.80, 0.60, PALLET_H]),   # euro-pallet footprint
+            color=np.array([0.50, 0.51, 0.54]) if PALLET_H > 0.5
+            else np.array([0.55, 0.55, 0.58]) if PALLET_H > 0.20
+            else np.array([0.42, 0.31, 0.20])))
+        log(f"[astra] pallet {PALLET_H:.3f} m under the crate "
+            f"(centre -> {CRATE_Z:.3f})")
 
     # ---- the euro crate ----
     if A.plain_box:
-        make_carton(stage, "/World/crate", CRATE_HALF, 1.5,
-                    os.path.join(TEX_DIR, "cardboard.png"))
+        if A.crate_skin:
+            # collider and skin as siblings under one rigid body, so the
+            # collider can be hidden without hiding the skin
+            _root = UsdGeom.Xform.Define(stage, Sdf.Path("/World/crate"))
+            _bp = make_carton(stage, "/World/crate/box", CRATE_HALF, 1.5,
+                              os.path.join(TEX_DIR, "cardboard.png"))
+            _bp.RemoveAPI(UsdPhysics.RigidBodyAPI)     # body belongs on the parent
+            UsdGeom.Imageable(_bp).CreateVisibilityAttr("invisible")
+            UsdPhysics.RigidBodyAPI.Apply(_root.GetPrim())
+            UsdPhysics.MassAPI.Apply(_root.GetPrim()).CreateMassAttr(1.5)
+        else:
+            make_carton(stage, "/World/crate", CRATE_HALF, 1.5,
+                        os.path.join(TEX_DIR, "cardboard.png"))
         crate = world.scene.add(SingleRigidPrim(
             prim_path="/World/crate", name="crate",
             position=np.array([TABLE_XY[0], TABLE_XY[1], CRATE_Z])))
-        log("[astra] cardboard carton created")
+        CRATE_OFF = np.zeros(3)   # make_carton builds it centred on the origin
+        if A.crate_skin:
+            _sk = SM_CRATE if A.crate_skin == "sm" else A.crate_skin
+            _sz, _sc = skin_crate(stage, "/World/crate", _sk,
+                                  [2 * h for h in CRATE_HALF],
+                                  visual_h=A.skin_height)
+            log(f"[astra] crate skin {os.path.basename(_sk)} "
+                f"{np.round(_sz, 3)} -> scale {np.round(_sc, 3)}")
+        else:
+            log("[astra] cardboard carton created")
     else:
         add_reference_to_stage(usd_path=CRATE_USD, prim_path="/World/crate")
         cp = stage.GetPrimAtPath("/World/crate")
@@ -630,21 +898,64 @@ def main():
         UsdPhysics.CollisionAPI.Apply(cp)
         mass = UsdPhysics.MassAPI.Apply(cp)
         mass.CreateMassAttr(1.5)
-        for child in cp.GetChildren():
+        # Recurse: GetChildren() only sees direct children, and assets like
+        # SM_Crate_A07 nest their meshes under SubUSDs, so a direct-children
+        # sweep gives the crate NO colliders and the hands pass through it.
+        _ncol = 0
+        for child in Usd.PrimRange(cp):
             if child.IsA(UsdGeom.Mesh):
                 UsdPhysics.CollisionAPI.Apply(child)
                 mc = UsdPhysics.MeshCollisionAPI.Apply(child)
                 mc.CreateApproximationAttr().Set("convexHull")
+                _ncol += 1
+        log(f"[astra] crate colliders: {_ncol} meshes")
+        # These assets put their origin at the BASE, so the geometric centre
+        # sits half a height higher. Measure it rather than assume: the policy
+        # is fed the centre, and being a half-height low makes every grasp miss.
+        _bb = UsdGeom.BBoxCache(Usd.TimeCode.Default(),
+                                ["default", "render", "proxy", "guide"])
+        _r = _bb.ComputeWorldBound(cp).ComputeAlignedRange()
+        _mn, _mx = _r.GetMin(), _r.GetMax()
+        CRATE_OFF = np.array([(_mn[0] + _mx[0]) / 2.0,
+                              (_mn[1] + _mx[1]) / 2.0,
+                              (_mn[2] + _mx[2]) / 2.0])
+        _cy = math.radians(A.crate_yaw) / 2.0
         crate = world.scene.add(SingleRigidPrim(
             prim_path="/World/crate", name="crate",
-            position=np.array([TABLE_XY[0], TABLE_XY[1], CRATE_Z])))
-        log("[astra] euro crate USD added as rigid body")
+            position=np.array([TABLE_XY[0] - CRATE_OFF[0],
+                               TABLE_XY[1] - CRATE_OFF[1],
+                               CRATE_Z - CRATE_OFF[2]]),
+            orientation=np.array([math.cos(_cy), 0.0, 0.0, math.sin(_cy)])))
+        _vm = sum(1 for _q in Usd.PrimRange(cp) if _q.IsA(UsdGeom.Mesh))
+        _vr = _bb.ComputeWorldBound(cp).ComputeAlignedRange()
+        log(f"[astra] crate prim: {_vm} meshes, bbox {np.round(_vr.GetMin(),3)}"
+            f"..{np.round(_vr.GetMax(),3)}")
+        log(f"[astra] crate USD added as rigid body; origin->centre offset "
+            f"{np.round(CRATE_OFF, 4)}")
 
     world.reset()
 
     # after reset the MJCF geometry is fully realised, so binding sticks
-    _nm = metalize(stage, "/World/G1")
-    log(f"[astra] metallic finish bound to {_nm} meshes")
+    # The skin asset ships an MDL material (Plastic_Yellow_A.mdl) that does not
+    # resolve here and renders near-black. Bind our own yellow -- and do it
+    # AFTER world.reset(), because the reference is not composed before that,
+    # so an earlier sweep finds no meshes at all.
+    if A.crate_skin:
+        from pxr import UsdShade as _USy
+        _yl = plastic_mat(stage, "/World/_crate_skin",
+                          (0.55, 0.56, 0.59), rough=0.28)
+        _nsk = 0
+        _skp = stage.GetPrimAtPath("/World/crate/skin")
+        if _skp and _skp.IsValid():
+            for _pp in Usd.PrimRange(_skp):
+                if _pp.IsA(UsdGeom.Mesh):
+                    _USy.MaterialBindingAPI.Apply(_pp).Bind(
+                        _yl, bindingStrength=_USy.Tokens.strongerThanDescendants)
+                    _nsk += 1
+        log(f"[astra] crate skin: yellow bound to {_nsk} meshes")
+
+    _ns, _nd = shade_g1(stage)
+    log(f"[astra] G1 shaded: {_ns} shell meshes grey, {_nd} head/hand meshes black")
 
     if os.environ.get("OC_PROBE") == "1":
         _bc = UsdGeom.BBoxCache(Usd.TimeCode.Default(),
@@ -729,6 +1040,21 @@ def main():
     isaac2mj = np.array([dof.index(j) for j in MJ_JOINTS], dtype=np.int32)
     log(f"[astra] {len(dof)} dofs mapped")
 
+    # Walking speed. plan_cfgen_reference() builds the generator as
+    # cfgen_cls(pad=30), so the pace comes from CfGenCarryBox's default
+    # step_size_linear -- the spacing between reference waypoints, in metres.
+    # Smaller spacing means more frames to cover the same ground, i.e. a slower
+    # walk with the gait actually legible. Overriding __defaults__ keeps the
+    # vendored source untouched; the signature is (pad, linear, angular).
+    _walk = float(os.environ.get("OC_WALK", "0.016"))
+    if abs(_walk - 0.016) > 1e-6:
+        from policy.omnicontact.CFgen_meta2_carrybox import CfGenCarryBox as _CGC
+        _d = list(_CGC.__init__.__defaults__)
+        _d[1] = _walk
+        _CGC.__init__.__defaults__ = tuple(_d)
+        log(f"[astra] walk step {_walk:.4f} m (default 0.016) -> "
+            f"{0.016 / _walk:.2f}x slower")
+
     runner = build_runner("carrybox")
     policy, sc, po = runner.policy, runner.state_cmd, runner.policy_output
     log(f"[astra] policy ready | task={policy.task} "
@@ -775,7 +1101,15 @@ def main():
         # wall into empty space, which renders as a black band (OC_CAMSWEEP=1
         # measures it: tgt z 0.50 -> 0 rows, 0.85 -> 59, 1.30 -> 127). The dead
         # floor at the bottom is cropped off in run_astra_demo.sh instead.
-        set_camera_view(eye=[7.20, 6.30, 3.40], target=[6.90, -0.90, 1.00])
+        # OC_CAM="ex,ey,ez,tx,ty,tz" overrides the framing, for verification
+        # renders of parts of the set the demo camera does not cover.
+        _cam = os.environ.get("OC_CAM")
+        if _cam:
+            _v = [float(x) for x in _cam.split(",")]
+            set_camera_view(eye=_v[:3], target=_v[3:6])
+            log(f"[astra] camera override {_v}")
+        else:
+            set_camera_view(eye=[7.20, 6.30, 3.40], target=[6.90, -0.90, 1.00])
         _w, _h = (int(v) for v in os.environ.get("OC_RES", "1280x720").split("x"))
         rp = rep.create.render_product("/OmniverseKit_Persp", (_w, _h))
         log(f"[astra] render {_w}x{_h}")
@@ -826,6 +1160,14 @@ def main():
     blend_i, BLEND_N = 0, 50    # policy ticks to cross-fade (50*4 steps = 1 s)
     still = 0
     prev_box = None
+    # --- carry weld ---------------------------------------------------------
+    welded = False
+    weld_off = None      # crate centre in the robot's yaw frame, at grasp time
+    weld_dyaw = 0.0      # crate yaw relative to robot yaw, at grasp time
+    weld_stall = 0
+    weld_done = False    # weld once per carry, never re-grab after release
+    prev_bxy = None
+    WELD = os.environ.get("OC_WELD", "1") == "1"
     HOME = (0.0, 0.0)
     for step in range(A.max_steps):
         q = robot.get_joint_positions()
@@ -849,23 +1191,65 @@ def main():
         sc.lin_vel[:] = R.T @ robot.get_linear_velocity()
         sc.gravity_ori[:] = R.T @ np.array([0.0, 0.0, -1.0])
 
-        opos, oquat = crate.get_world_pose()
+        _praw, oquat = crate.get_world_pose()
+        # prim origin -> geometric centre, rotated into world
+        _w, _x, _y, _z = oquat
+        _Rc = np.array([
+            [1 - 2 * (_y * _y + _z * _z), 2 * (_x * _y - _w * _z), 2 * (_x * _z + _w * _y)],
+            [2 * (_x * _y + _w * _z), 1 - 2 * (_x * _x + _z * _z), 2 * (_y * _z - _w * _x)],
+            [2 * (_x * _z - _w * _y), 2 * (_y * _z + _w * _x), 1 - 2 * (_x * _x + _y * _y)]])
+        opos = _praw + _Rc @ CRATE_OFF
         sc.obj_pos[:] = opos
         sc.obj_quat[:] = oquat
         sc.carry_box_pos[:] = opos
         sc.carry_box_quat[:] = oquat
 
-        # The stand only has to hold the box until it is picked up. It sits at
-        # (1.5, 0), right on the path to the conveyor at (3.3, 0), and the robot
-        # trips over it mid-carry. Once the box is up, drop its collision.
-        if phase == "carry" and opos[2] > 0.60 and not stand_off:
+        # The stand only has to hold the box until it is picked up -- it sits on
+        # the path to the conveyor and the robot trips over it mid-carry, so its
+        # collision is dropped once the box is clearly off it. The threshold has
+        # to be RELATIVE to where the crate started: an absolute 0.60 fires on
+        # frame 1 for a crate presented at table height, deleting the stand out
+        # from under it.
+        # --- keep the carried crate upright ----------------------------
+        # The policy squeezes the crate between the palms and nothing resists
+        # roll, so it tumbles in transit and lands upside down. Cancel roll and
+        # pitch each step, keeping the yaw physics produced, and leave position
+        # alone so the policy still does the carrying and the placing.
+        #
+        # Deliberately NOT a kinematic weld: making the crate kinematic renders
+        # it immovable to the solver, the grip reaction throws the robot, and
+        # it falls mid-carry.
+        # Relative to where the crate started, not absolute: a crate presented
+        # on a 0.65 m table is already above any fixed threshold, so an
+        # absolute 0.45 clamped its pose from frame 0 while it still sat there.
+        # +0.04, not +0.15: the wobble the pick shows lives in the first
+        # 15 cm of the lift, before the hold used to engage. Just above the
+        # resting height, physics jitter cannot reach it but a real lift
+        # trips it within a step or two.
+        if WELD and phase == "carry" and opos[2] > CRATE_Z + 0.04:
+            _cy = math.atan2(
+                2.0 * (oquat[0] * oquat[3] + oquat[1] * oquat[2]),
+                1.0 - 2.0 * (oquat[2] ** 2 + oquat[3] ** 2))
+            crate.set_world_pose(
+                position=_praw,
+                orientation=np.array([math.cos(_cy / 2), 0.0, 0.0,
+                                      math.sin(_cy / 2)]))
+            _av = np.asarray(crate.get_angular_velocity(), dtype=float)
+            crate.set_angular_velocity(np.array([0.0, 0.0, _av[2] * 0.2]))
+            if not welded:
+                welded = True
+                log(f"[astra] crate held upright from step {step}")
+
+
+        if phase == "carry" and opos[2] > CRATE_Z + 0.25 and not stand_off:
             tp = stage.GetPrimAtPath("/World/table")
             if tp and tp.IsValid():
                 for q in Usd.PrimRange(tp):
                     if q.HasAPI(UsdPhysics.CollisionAPI):
                         UsdPhysics.CollisionAPI(q).CreateCollisionEnabledAttr(False)
                 stand_off = True
-                log(f"[astra] box lifted -- stand collision off @{step}")
+                log(f"[astra] box lifted @{step} -- table collision off so the "
+                    f"robot can turn with the crate without fouling it")
 
         # --- once the box is placed and has stopped moving, walk home ---
         if phase == "carry" and step > 600:
@@ -908,7 +1292,9 @@ def main():
                     f"-- respawning box on the stand")
                 # box reappears where it started
                 crate.set_world_pose(
-                    position=np.array([TABLE_XY[0], TABLE_XY[1], CRATE_Z]),
+                    position=np.array([TABLE_XY[0] - CRATE_OFF[0],
+                                       TABLE_XY[1] - CRATE_OFF[1],
+                                       CRATE_Z - CRATE_OFF[2]]),
                     orientation=np.array([1.0, 0.0, 0.0, 0.0]))
                 crate.set_linear_velocity(np.zeros(3))
                 crate.set_angular_velocity(np.zeros(3))
