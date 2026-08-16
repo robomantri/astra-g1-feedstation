@@ -119,8 +119,8 @@ See `logs/g1_train_smoke.log`.
 
 ## 20 — pallet to conveyor, rotated belt (current)
 
-`20_ASTRA_pallet_to_conveyor_rot90.mp4` — the demo `run_astra_demo.sh` now
-produces. Layout left to right: pallet with the crate (x 9.0), robot (x 7.0),
+`task_pick_place_astra.mp4` — the demo `run_astra_demo.sh` now produces
+(same content as `astra_g1_conveyor_wallside.mp4`, the script's default name). Layout left to right: pallet with the crate (x 9.0), robot (x 7.0),
 conveyor turned 90 degrees (x 3.68..4.84) so the robot loads its long side.
 The G1 walks to the pallet, picks the crate, turns ~180 degrees and places it
 flat on the rollers at (4.50, 0.42, 0.87) = deck top 0.77 + half height 0.10.
@@ -146,3 +146,19 @@ black head/hands.
 each on a pallet inside a painted floor box.
 `isaac_asset_contact_sheet.png` — every crate/bin/conveyor asset available,
 with measured dimensions.
+
+---
+
+## Where the scripts named above live now
+
+These notes reference files from the experiment repos, which were removed from
+the L4 box during cleanup. Current locations:
+
+| referenced | where it is now |
+|---|---|
+| `walkpickturn_env_cfg.py` | `l4_backup/ARCHIVE/coordex_source_changes.tar.gz`, under `source/coordex/coordex/tasks/locomanip/` (with `.astra` and `.bak` variants) |
+| `stop_im.sh` | `l4_backup/stop_im.sh` |
+| `intermimic_g1.py`, `play_residual.py`, `play_weld.py`, `test_g1.sh`, `train_g1.sh` | **gone** — they belonged to the intermimic_hoi / ResMimic / coordex checkouts, which were deleted. The findings they produced are recorded above; the scripts themselves are not recoverable from this repo. |
+
+None of this affects the current demo, which depends only on
+`scripts/astra_demo/` and `vendor/`.
